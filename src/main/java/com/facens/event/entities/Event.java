@@ -5,7 +5,12 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+
+import com.facens.event.dto.EventDTO;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 public class Event implements Serializable{
@@ -13,38 +18,43 @@ public class Event implements Serializable{
     private static final long serialVersionUID = 1L;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String description;
     private String place;
+
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate startDate;
+
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate endDate;
+
+    @JsonFormat(pattern = "HH:mm")
     private LocalTime startTime;
+
+    @JsonFormat(pattern = "HH:mm")
     private LocalTime endTime;
     private String email;
 
     public Event() {
     }
-    
-    public Event(Long id, String name, String description, String place, LocalDate startDate, LocalDate endDate,
-            LocalTime startTime, LocalTime endTime, String email) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.place = place;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.email = email;
-    }
+
+    public Event(EventDTO eventDTO) {
+        this.name = eventDTO.getName();
+        this.description = eventDTO.getDescription();
+        this.place = eventDTO.getPlace();
+        this.startDate = eventDTO.getStartDate();
+        this.endDate = eventDTO.getEndDate();
+        this.startTime = eventDTO.getStartTime();
+        this.endTime = eventDTO.getEndTime();
+        this.email = eventDTO.getEmail();
+	}
 
     public Long getId() {
         return id;
     }
-    public void setId(Long id) {
-        this.id = id;
-    }
+
     public String getName() {
         return name;
     }
