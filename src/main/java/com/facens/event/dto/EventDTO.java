@@ -49,7 +49,7 @@ public class EventDTO {
         return id;
     }
 
-    public void setId(Long id) {
+    private void setId(Long id) {
         this.id = id;
     }
 
