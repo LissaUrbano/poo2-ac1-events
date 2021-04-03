@@ -6,6 +6,7 @@ import com.facens.event.dto.EventDTO;
 import com.facens.event.entities.Event;
 import com.facens.event.repositories.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -16,6 +17,8 @@ public class EventService {
     @Autowired
     private EventRepository eventRepository;
 
+    private String msgNotFound = "Event not found";
+
     public EventDTO insert(EventDTO eventDTO) {
         validarDataHora(eventDTO);
         Event event = new Event(eventDTO);
@@ -23,6 +26,13 @@ public class EventService {
         return new EventDTO(eventRepository.save(event));
     }
 
+    public void delete(Long id) {
+        try {
+            eventRepository.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, msgNotFound);
+        }
+    }
     
     private void validarDataHora(EventDTO eventDTO) {
 
