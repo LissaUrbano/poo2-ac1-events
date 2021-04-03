@@ -1,6 +1,7 @@
 package com.facens.event.services;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import com.facens.event.dto.EventDTO;
 import com.facens.event.entities.Event;
@@ -32,6 +33,12 @@ public class EventService {
         } catch (EmptyResultDataAccessException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, msgNotFound);
         }
+    }
+
+    public EventDTO getEventById(Long id) {
+        Optional<Event> op = eventRepository.findById(id);
+        Event event = op.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, msgNotFound));
+        return new EventDTO(event);
     }
     
     private void validarDataHora(EventDTO eventDTO) {
