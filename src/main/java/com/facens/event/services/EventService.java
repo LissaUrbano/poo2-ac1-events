@@ -11,6 +11,8 @@ import com.facens.event.entities.Event;
 import com.facens.event.repositories.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -22,6 +24,11 @@ public class EventService {
     private EventRepository eventRepository;
 
     private String msgNotFound = "Event not found";
+
+    public Page<EventDTO> getEvents(PageRequest pageRequest) {
+        Page<Event> list = eventRepository.findEventsPageble(pageRequest);
+        return list.map( ev -> new EventDTO(ev));
+    }
 
     public EventDTO insert(EventDTO eventDTO) {
         validarDataHora(eventDTO);
