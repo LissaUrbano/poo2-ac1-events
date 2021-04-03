@@ -5,12 +5,10 @@ import java.time.LocalDate;
 import com.facens.event.dto.EventDTO;
 import com.facens.event.entities.Event;
 import com.facens.event.repositories.EventRepository;
-import com.facens.event.services.exception.DataFinalInvalidaException;
-import com.facens.event.services.exception.DataInicialInvalidaException;
-import com.facens.event.services.exception.HoraFinalInvalidaException;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class EventService {
@@ -19,22 +17,23 @@ public class EventService {
     private EventRepository eventRepository;
 
     public EventDTO insert(EventDTO eventDTO) {
+        validarDataHora(eventDTO);
         Event event = new Event(eventDTO);
-        validarDataHora(event);
+
         return new EventDTO(eventRepository.save(event));
     }
 
     
-    private void validarDataHora(Event event) {
+    private void validarDataHora(EventDTO eventDTO) {
 
-        if (event.getStartDate().isBefore(LocalDate.now())) {
-            throw new DataInicialInvalidaException();
+        if (eventDTO.getStartDate().isBefore(LocalDate.now())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A data inicial informada deve ser igual ou maior que a data de hoje");
         }
-        if (event.getEndDate().isBefore(event.getStartDate())) {
-            throw new DataFinalInvalidaException();
+        if (eventDTO.getEndDate().isBefore(eventDTO.getStartDate())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A data final informada deve ser igual ou maior que a data inicial do evento");
         }
-        if (event.getEndTime().isBefore(event.getStartTime())) {
-            throw new HoraFinalInvalidaException();
+        if (eventDTO.getEndTime().isBefore(eventDTO.getStartTime())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A hora final informada deve ser maior que a hora inicial do evento");
         }
     }
 
