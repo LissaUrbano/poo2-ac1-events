@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Optional;
 
+import javax.persistence.EntityNotFoundException;
+
 import com.facens.event.dto.EventDTO;
 import com.facens.event.entities.Event;
 import com.facens.event.repositories.EventRepository;
@@ -39,6 +41,47 @@ public class EventService {
         Optional<Event> op = eventRepository.findById(id);
         Event event = op.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, msgNotFound));
         return new EventDTO(event);
+    }
+
+    public EventDTO update(Long id, EventDTO eventDTO) { 
+        try {
+            Event event = eventRepository.getOne(id);
+            //não seta valores Null que vieram do DTO
+            if(eventDTO.getName() != null) {
+                event.setName(eventDTO.getName());
+            }
+            if(eventDTO.getDescription() != null) {
+                event.setDescription(eventDTO.getDescription());
+            }
+            if(eventDTO.getPlace() != null) {
+                event.setPlace(eventDTO.getPlace());
+            }
+            if(eventDTO.getStartDate() != null) {
+                event.setStartDate(eventDTO.getStartDate()); 
+            }
+            if(eventDTO.getEndDate() != null) {
+                event.setEndDate(eventDTO.getEndDate());
+            }
+            if(eventDTO.getStartTime() != null) {
+                event.setStartTime(eventDTO.getStartTime());
+            }
+            if(eventDTO.getEndTime() != null) {
+                event.setEndTime(eventDTO.getEndTime()); 
+            }
+            if(eventDTO.getEmail() != null) {
+                event.setEmail(eventDTO.getEmail());
+            }
+
+            //valida os novos dados inseridos para Data e Hora
+            EventDTO eventValidacao = new EventDTO(event);
+            validarDataHora(eventValidacao);
+            
+            event = eventRepository.save(event);
+            return new EventDTO(event);
+
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, msgNotFound);
+        }
     }
     
     private void validarDataHora(EventDTO eventDTO) {
