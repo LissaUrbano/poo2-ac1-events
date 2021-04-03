@@ -1,6 +1,7 @@
 package com.facens.event.services;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Optional;
 
 import com.facens.event.dto.EventDTO;
@@ -23,7 +24,6 @@ public class EventService {
     public EventDTO insert(EventDTO eventDTO) {
         validarDataHora(eventDTO);
         Event event = new Event(eventDTO);
-
         return new EventDTO(eventRepository.save(event));
     }
 
@@ -48,6 +48,9 @@ public class EventService {
         }
         if (eventDTO.getEndDate().isBefore(eventDTO.getStartDate())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A data final informada deve ser igual ou maior que a data inicial do evento");
+        }
+        if (eventDTO.getStartDate().isEqual(LocalDate.now()) && eventDTO.getStartTime().isBefore(LocalTime.now()) ) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Para eventos na data de hoje a hora inicial deve ser igual ou maior ao horario atual");
         }
         if (eventDTO.getEndTime().isBefore(eventDTO.getStartTime())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A hora final informada deve ser maior que a hora inicial do evento");
