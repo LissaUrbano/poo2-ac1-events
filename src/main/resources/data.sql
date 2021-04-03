@@ -1,0 +1,2 @@
+INSERT INTO TB_EVENT (NAME , DESCRIPTION , PLACE , START_DATE , END_DATE , START_TIME , END_TIME , EMAIL ) VALUES ('festa', 'festa de aniversário', 'Sorocaba', '2021-10-01', '2021-12-01', '10:45', '12:00', 'andaabc@gmail.com');
+INSERT INTO TB_EVENT (NAME , DESCRIPTION , PLACE , START_DATE , END_DATE , START_TIME , END_TIME , EMAIL ) VALUES ('Feijuca', 'festa da feijoada', 'Araçoiaba', '2021-09-01', '2021-10-01', '10:00', '12:00', 'fei12aabc@gmail.com');
