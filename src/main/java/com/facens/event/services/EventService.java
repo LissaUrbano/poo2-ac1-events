@@ -2,6 +2,7 @@ package com.facens.event.services;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 import javax.persistence.EntityNotFoundException;
@@ -9,6 +10,7 @@ import javax.persistence.EntityNotFoundException;
 import com.facens.event.dto.EventDTO;
 import com.facens.event.entities.Event;
 import com.facens.event.repositories.EventRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
@@ -25,9 +27,10 @@ public class EventService {
 
     private String msgNotFound = "Event not found";
 
-    public Page<EventDTO> getEvents(PageRequest pageRequest) {
-        Page<Event> list = eventRepository.findEventsPageble(pageRequest);
-        return list.map( ev -> new EventDTO(ev));
+    public Page<EventDTO> getEvents(PageRequest pageRequest, String name, String place, String startDate, String description) {
+        LocalDate date = convertLocalDate(startDate);
+        Page<Event> list = eventRepository.findEventsPageble(pageRequest, name, place, date, description);
+        return list.map( e -> new EventDTO(e));
     }
 
     public EventDTO insert(EventDTO eventDTO) {
@@ -105,6 +108,20 @@ public class EventService {
         if (eventDTO.getEndTime().isBefore(eventDTO.getStartTime())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A hora final informada deve ser maior que a hora inicial do evento");
         }
+    }
+
+    private LocalDate convertLocalDate(String startDate) {
+        if (!startDate.isEmpty()) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");    
+            try {
+                LocalDate date = LocalDate.parse(startDate, formatter);
+                return date;
+            } catch (Exception e) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Data de filtro inválida, inserir no formato dia/mês/ano. exemplo: 03/04/2021");
+            }  
+        } else {
+            return LocalDate.of(2000, 01, 01) ; //date default caso null
+        }     
     }
 
 }

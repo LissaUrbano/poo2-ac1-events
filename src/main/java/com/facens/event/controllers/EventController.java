@@ -1,7 +1,6 @@
 package com.facens.event.controllers;
 
 import java.net.URI;
-import java.util.List;
 
 import com.facens.event.dto.EventDTO;
 import com.facens.event.services.EventService;
@@ -34,10 +33,15 @@ public class EventController {
 		@RequestParam(value = "page", 			defaultValue = "0") Integer page,
 		@RequestParam(value = "linesPerPage", 	defaultValue = "6") Integer linesPerPage,
 		@RequestParam(value = "direction", 		defaultValue = "ASC") String direction,
-		@RequestParam(value = "orderBy", 		defaultValue = "id") String orderBy
+		@RequestParam(value = "orderBy", 		defaultValue = "id") String orderBy,
+		@RequestParam(value = "name", 			defaultValue = "") String name,
+		@RequestParam(value = "place",          defaultValue = "") String place,	        
+		@RequestParam(value = "startDate",      defaultValue = "") String startDate,
+	    @RequestParam(value = "description",    defaultValue = "") String description
+
 	){
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction),orderBy);
-        Page<EventDTO> list = eventService.getEvents(pageRequest);
+        Page<EventDTO> list = eventService.getEvents(pageRequest, name, place, startDate, description);
         return ResponseEntity.ok().body(list);
     }
 
