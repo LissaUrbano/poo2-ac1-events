@@ -10,39 +10,56 @@ public class EventDTO {
     private Long id;
     private String name;
     private String description;
-    private String place;
+    //private String place;
     private LocalDate startDate;
     private LocalDate endDate;
     private LocalTime startTime;
     private LocalTime endTime;
-    private String email;
+    private String emailContact;
+
+    private Integer amountFreeTickets; 
+    private Integer amountPayedTickets;
+    private Integer freeTickectsSelled;
+    private Integer payedTickectsSelled;
+    private Double priceTicket;
     
     public EventDTO() {
     }
 
-    public EventDTO(Long id, String name, String description, String place, LocalDate startDate, LocalDate endDate,
-            LocalTime startTime, LocalTime endTime, String email) {
+    public EventDTO(Long id, String name, String description, /*String place,*/ LocalDate startDate, LocalDate endDate,
+            LocalTime startTime, LocalTime endTime, String emailContact, Integer amountFreeTickets, Integer amountPayedTickets,
+            Integer freeTickectsSelled, Integer payedTickectsSelled, Double priceTicket) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.place = place;
+        //this.place = place;
         this.startDate = startDate;
         this.endDate = endDate;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.email = email;
+        this.emailContact = emailContact;
+        this.amountFreeTickets = amountFreeTickets;
+        this.amountPayedTickets = amountPayedTickets;
+        this.freeTickectsSelled = freeTickectsSelled;
+        this.payedTickectsSelled = payedTickectsSelled;
+        this.priceTicket = priceTicket;
     }
 
     public EventDTO(Event event) {
         setId(event.getId());
         setName(event.getName());
         setDescription(event.getDescription());
-        setPlace(event.getPlace());
+        //setPlace(event.getPlace());
         setStartDate(event.getStartDate());
         setEndDate(event.getEndDate());
         setStartTime(event.getStartTime());
         setEndTime(event.getEndTime());
-        setEmail(event.getEmail());
+        setEmailContact(event.getEmailContact());
+        setAmountFreeTickets(event.getAmountFreeTickets());
+        setAmountPayedTickets(event.getAmountPayedTickets());
+        setFreeTickectsSelled(event.getFreeTickectsSelled());
+        setPayedTickectsSelled(event.getPayedTickectsSelled());
+        setPriceTicket(event.getPriceTicket());
 	}
 
     public Long getId() {
@@ -69,6 +86,7 @@ public class EventDTO {
         this.description = description;
     }
 
+    /*
     public String getPlace() {
         return place;
     }
@@ -76,7 +94,7 @@ public class EventDTO {
     public void setPlace(String place) {
         this.place = place;
     }
-
+    */
     public LocalDate getStartDate() {
         return startDate;
     }
@@ -109,13 +127,64 @@ public class EventDTO {
         this.endTime = endTime;
     }
 
-    public String getEmail() {
-        return email;
+    public String getEmailContact() {
+        return emailContact;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setEmailContact(String emailContact) {
+        this.emailContact = emailContact;
     }
+
+
+
+
+
+
+    public Integer getAmountFreeTickets() {
+        return amountFreeTickets;
+    }
+
+    public void setAmountFreeTickets(Integer amountFreeTickets) {
+        this.amountFreeTickets = amountFreeTickets;
+    }
+
+    public Integer getAmountPayedTickets() {
+        return amountPayedTickets;
+    }
+
+    public void setAmountPayedTickets(Integer amountPayedTickets) {
+        this.amountPayedTickets = amountPayedTickets;
+    }
+
+    public Integer getFreeTickectsSelled() {
+        return freeTickectsSelled;
+    }
+
+    public void setFreeTickectsSelled(Integer freeTickectsSelled) {
+        this.freeTickectsSelled = freeTickectsSelled;
+    }
+
+    public Integer getPayedTickectsSelled() {
+        return payedTickectsSelled;
+    }
+
+    public void setPayedTickectsSelled(Integer payedTickectsSelled) {
+        this.payedTickectsSelled = payedTickectsSelled;
+    }
+
+    public Double getPriceTicket() {
+        return priceTicket;
+    }
+
+    public void setPriceTicket(Double priceTicket) {
+        this.priceTicket = priceTicket;
+    }
+
+
+
+
+
+    
 
 }
 

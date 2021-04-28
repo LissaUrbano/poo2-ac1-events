@@ -24,7 +24,7 @@ public class Event implements Serializable{
     private Long id;
     private String name;
     private String description;
-    private String place;
+    //private String place;
 
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate startDate;
@@ -37,7 +37,13 @@ public class Event implements Serializable{
 
     @JsonFormat(pattern = "HH:mm")
     private LocalTime endTime;
-    private String email;
+    private String emailContact;
+
+    private Integer amountFreeTickets; 
+    private Integer amountPayedTickets;
+    private Integer freeTickectsSelled;
+    private Integer payedTickectsSelled;
+    private Double priceTicket;
 
     public Event() {
     }
@@ -45,18 +51,22 @@ public class Event implements Serializable{
     public Event(EventDTO eventDTO) {
         this.name = eventDTO.getName();
         this.description = eventDTO.getDescription();
-        this.place = eventDTO.getPlace();
+        //this.place = eventDTO.getPlace();
         this.startDate = eventDTO.getStartDate();
         this.endDate = eventDTO.getEndDate();
         this.startTime = eventDTO.getStartTime();
         this.endTime = eventDTO.getEndTime();
-        this.email = eventDTO.getEmail();
+        this.emailContact = eventDTO.getEmailContact();
+        this.amountFreeTickets = eventDTO.getAmountFreeTickets();
+        this.amountPayedTickets = eventDTO.getAmountPayedTickets();
+        this.freeTickectsSelled = eventDTO.getFreeTickectsSelled();
+        this.payedTickectsSelled = eventDTO.getPayedTickectsSelled();
+        this.priceTicket = eventDTO.getPriceTicket();
 	}
 
     public Long getId() {
         return id;
     }
-
     public String getName() {
         return name;
     }
@@ -69,12 +79,13 @@ public class Event implements Serializable{
     public void setDescription(String description) {
         this.description = description;
     }
+    /*
     public String getPlace() {
         return place;
     }
     public void setPlace(String place) {
         this.place = place;
-    }
+    }*/
     public LocalDate getStartDate() {
         return startDate;
     }
@@ -99,12 +110,57 @@ public class Event implements Serializable{
     public void setEndTime(LocalTime endTime) {
         this.endTime = endTime;
     }
-    public String getEmail() {
-        return email;
+    public String getEmailContact() {
+        return emailContact;
     }
-    public void setEmail(String email) {
-        this.email = email;
+    public void setEmailContact(String emailContact) {
+        this.emailContact = emailContact;
     }
+
+
+    
+
+    public Integer getAmountFreeTickets() {
+        return amountFreeTickets;
+    }
+
+    public void setAmountFreeTickets(Integer amountFreeTickets) {
+        this.amountFreeTickets = amountFreeTickets;
+    }
+
+    public Integer getAmountPayedTickets() {
+        return amountPayedTickets;
+    }
+
+    public void setAmountPayedTickets(Integer amountPayedTickets) {
+        this.amountPayedTickets = amountPayedTickets;
+    }
+
+    public Integer getFreeTickectsSelled() {
+        return freeTickectsSelled;
+    }
+
+    public void setFreeTickectsSelled(Integer freeTickectsSelled) {
+        this.freeTickectsSelled = freeTickectsSelled;
+    }
+
+    public Integer getPayedTickectsSelled() {
+        return payedTickectsSelled;
+    }
+
+    public void setPayedTickectsSelled(Integer payedTickectsSelled) {
+        this.payedTickectsSelled = payedTickectsSelled;
+    }
+
+    public Double getPriceTicket() {
+        return priceTicket;
+    }
+
+    public void setPriceTicket(Double priceTicket) {
+        this.priceTicket = priceTicket;
+    }
+
+
 
     @Override
     public int hashCode() {

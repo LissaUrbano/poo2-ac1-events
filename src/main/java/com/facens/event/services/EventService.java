@@ -63,9 +63,9 @@ public class EventService {
             if(eventDTO.getDescription() != null) {
                 event.setDescription(eventDTO.getDescription());
             }
-            if(eventDTO.getPlace() != null) {
+            /*if(eventDTO.getPlace() != null) {
                 event.setPlace(eventDTO.getPlace());
-            }
+            }*/
             if(eventDTO.getStartDate() != null) {
                 event.setStartDate(eventDTO.getStartDate()); 
             }
@@ -78,8 +78,8 @@ public class EventService {
             if(eventDTO.getEndTime() != null) {
                 event.setEndTime(eventDTO.getEndTime()); 
             }
-            if(eventDTO.getEmail() != null) {
-                event.setEmail(eventDTO.getEmail());
+            if(eventDTO.getEmailContact() != null) {
+                event.setEmailContact(eventDTO.getEmailContact());
             }
 
             //valida os novos dados inseridos para Data e Hora
