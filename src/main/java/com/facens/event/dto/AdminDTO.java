@@ -23,7 +23,7 @@ public class AdminDTO {
         setId(admin.getId());
         setName(admin.getName());
         setEmail(admin.getEmail());
-        setEmail(admin.getPhoneNumber());
+        setPhoneNumber(admin.getPhoneNumber());
 	}
 
     public Long getId() {

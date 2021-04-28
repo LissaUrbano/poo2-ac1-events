@@ -7,12 +7,12 @@ public class AttendantDTO {
     private Long id;
     private String name;
     private String email;
-    private String balance;
+    private Double balance;
 
     public AttendantDTO() {
     }
 
-    public AttendantDTO(Long id, String name, String email, String balance) {
+    public AttendantDTO(Long id, String name, String email, Double balance) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -44,10 +44,10 @@ public class AttendantDTO {
     public void setEmail(String email) {
         this.email = email;
     }
-    public String getBalance() {
+    public Double getBalance() {
         return balance;
     }
-    public void setBalance(String balance) {
+    public void setBalance(Double balance) {
         this.balance = balance;
     }
 

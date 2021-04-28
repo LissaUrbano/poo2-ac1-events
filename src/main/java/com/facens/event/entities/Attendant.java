@@ -21,7 +21,7 @@ public class Attendant implements Serializable{
     private Long id;
     private String name;
     private String email;
-    private String balance;
+    private Double balance;
 
     public Attendant() {
     }
@@ -47,10 +47,10 @@ public class Attendant implements Serializable{
     public void setEmail(String email) {
         this.email = email;
     }
-    public String getBalance() {
+    public Double getBalance() {
         return balance;
     }
-    public void setBalance(String balance) {
+    public void setBalance(Double balance) {
         this.balance = balance;
     }
 
