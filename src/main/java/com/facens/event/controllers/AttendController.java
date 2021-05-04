@@ -2,8 +2,8 @@ package com.facens.event.controllers;
 
 import java.net.URI;
 
-import com.facens.event.dto.AttendantDTO;
-import com.facens.event.services.AttendantService;
+import com.facens.event.dto.AttendDTO;
+import com.facens.event.services.AttendService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,14 +22,14 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
-@RequestMapping("/attendees")
-public class AttendantController {
+@RequestMapping("/attends")
+public class AttendController {
 
     @Autowired
-    private AttendantService attendantService;
+    private AttendService attendService;
 
 	@GetMapping
-    public ResponseEntity<Page<AttendantDTO>> getAttendants(
+    public ResponseEntity<Page<AttendDTO>> getAttends(
 		@RequestParam(value = "page", 			defaultValue = "0") Integer page,
 		@RequestParam(value = "linesPerPage", 	defaultValue = "6") Integer linesPerPage,
 		@RequestParam(value = "direction", 		defaultValue = "ASC") String direction,
@@ -38,32 +38,32 @@ public class AttendantController {
 		@RequestParam(value = "email",          defaultValue = "") String email
 	){
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction),orderBy);
-        Page<AttendantDTO> list = attendantService.getAttendants(pageRequest, name, email);
+        Page<AttendDTO> list = attendService.getAttends(pageRequest, name, email);
         return ResponseEntity.ok().body(list);
     }
 
     @PostMapping
-	public ResponseEntity<AttendantDTO> insert(@RequestBody AttendantDTO attendantDTO){
-		AttendantDTO dto = attendantService.insert(attendantDTO); 
+	public ResponseEntity<AttendDTO> insert(@RequestBody AttendDTO attendDTO){
+		AttendDTO dto = attendService.insert(attendDTO); 
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
 		return ResponseEntity.created(uri).body(dto);
 	}
 
     @DeleteMapping("{id}")
 	public ResponseEntity<Void> delete(@PathVariable Long id){
-		attendantService.delete(id); 
+		attendService.delete(id); 
 		return ResponseEntity.noContent().build();
 	}
 
     @GetMapping("{id}")
-    public ResponseEntity<AttendantDTO> getAttendantById(@PathVariable Long id){
-        AttendantDTO dto = attendantService.getAttendantById(id);
+    public ResponseEntity<AttendDTO> getAttendById(@PathVariable Long id){
+        AttendDTO dto = attendService.getAttendById(id);
         return ResponseEntity.ok().body(dto);
     }
 
     @PutMapping("{id}")
-	public ResponseEntity<AttendantDTO> update(@RequestBody AttendantDTO updateDto, @PathVariable Long id){
-		AttendantDTO dto = attendantService.update(id, updateDto); 
+	public ResponseEntity<AttendDTO> update(@RequestBody AttendDTO updateDto, @PathVariable Long id){
+		AttendDTO dto = attendService.update(id, updateDto); 
 		return ResponseEntity.ok().body(dto);
 	}
     

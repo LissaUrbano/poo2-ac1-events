@@ -8,11 +8,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.facens.event.dto.AttendantDTO;
+import com.facens.event.dto.AttendDTO;
 
 @Entity
-@Table(name="TB_ATTENDANT")
-public class Attendant implements Serializable{
+@Table(name="TB_ATTEND")
+public class Attend implements Serializable{
     
     private static final long serialVersionUID = 1L;
 
@@ -23,13 +23,13 @@ public class Attendant implements Serializable{
     private String email;
     private Double balance;
 
-    public Attendant() {
+    public Attend() {
     }
 
-    public Attendant(AttendantDTO participantDTO) {
-        this.name = participantDTO.getName();
-        this.email = participantDTO.getEmail();
-        this.balance = participantDTO.getBalance();
+    public Attend(AttendDTO attendDTO) {
+        this.name = attendDTO.getName();
+        this.email = attendDTO.getEmail();
+        this.balance = attendDTO.getBalance();
 	}
 
     public Long getId() {
@@ -70,7 +70,7 @@ public class Attendant implements Serializable{
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Attendant other = (Attendant) obj;
+        Attend other = (Attend) obj;
         if (id == null) {
             if (other.id != null)
                 return false;

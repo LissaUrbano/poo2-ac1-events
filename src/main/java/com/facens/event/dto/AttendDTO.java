@@ -1,29 +1,29 @@
 package com.facens.event.dto;
 
-import com.facens.event.entities.Attendant;
+import com.facens.event.entities.Attend;
 
-public class AttendantDTO {
+public class AttendDTO {
 
     private Long id;
     private String name;
     private String email;
     private Double balance;
 
-    public AttendantDTO() {
+    public AttendDTO() {
     }
 
-    public AttendantDTO(Long id, String name, String email, Double balance) {
+    public AttendDTO(Long id, String name, String email, Double balance) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.balance = balance;
     }
 
-    public AttendantDTO(Attendant attendant) {
-        setId(attendant.getId());
-        setName(attendant.getName());
-        setEmail(attendant.getEmail());
-        setBalance(attendant.getBalance());
+    public AttendDTO(Attend attend) {
+        setId(attend.getId());
+        setName(attend.getName());
+        setEmail(attend.getEmail());
+        setBalance(attend.getBalance());
 	}
 
     public Long getId() {
