@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface EventRepository extends JpaRepository<Event, Long> {
     
+    /*
     @Query("SELECT e FROM Event e " 
     + "WHERE " 
     + "LOWER(e.name)        LIKE   LOWER(CONCAT('%', :name, '%'))        AND " 
@@ -21,5 +22,5 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     + "e.startDate >= :date"
     )
     public Page<Event> findEventsPageble(Pageable pageRequest, String name, String place, LocalDate date, String description);
-
+    */
 }

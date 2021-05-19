@@ -24,10 +24,11 @@ public class AttendService {
 
     private String msgNotFound = "Attend not found";
 
-    public Page<AttendDTO> getAttends(PageRequest pageRequest, String name, String email) {
-        Page<Attend> list = attendRepository.findAttendeesPageble(pageRequest, name, email);
+    /*
+    public Page<AttendDTO> getAttends(PageRequest pageRequest) {
+        Page<Attend> list = attendRepository.findAttendeesPageble(pageRequest);
         return list.map( e -> new AttendDTO(e));
-    }
+    }*/
 
     public AttendDTO insert(AttendDTO attendDTO) {
         Attend attend = new Attend(attendDTO);

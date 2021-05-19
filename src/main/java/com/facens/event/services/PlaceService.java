@@ -24,10 +24,11 @@ public class PlaceService {
 
     private String msgNotFound = "Place not found";
 
+    /*
     public Page<PlaceDTO> getPlaces(PageRequest pageRequest, String name, String address) {
         Page<Place> list = placeRepository.findPlacesPageble(pageRequest, name, address);
         return list.map( e -> new PlaceDTO(e));
-    }
+    }*/
 
     public PlaceDTO insert(PlaceDTO placeDTO) {
         Place place = new Place(placeDTO);

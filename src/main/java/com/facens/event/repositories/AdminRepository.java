@@ -11,12 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AdminRepository extends JpaRepository<Admin, Long> {
     
-    @Query("SELECT e FROM TB_ADMIN e " 
-    + "WHERE " 
-    + "LOWER(e.name)        LIKE   LOWER(CONCAT('%', :name, '%'))        AND " 
-    + "LOWER(e.email)       LIKE   LOWER(CONCAT('%', :email, '%'))       AND "
-    + "LOWER(e.phoneNumber) LIKE   LOWER(CONCAT('%', :phoneNumber, '%'))"
-    )
-    public Page<Admin> findAdminsPageble(Pageable pageRequest, String name, String email, String phoneNumber);
+    //@Query("SELECT e FROM TB_ADMIN e ")
+    //public Page<Admin> findAdminsPageble(Pageable pageRequest);
 
 }

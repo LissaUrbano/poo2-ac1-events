@@ -28,6 +28,7 @@ public class PlaceController {
     @Autowired
     private PlaceService placeService;
 
+	/*
 	@GetMapping
     public ResponseEntity<Page<PlaceDTO>> getPlaces(
 		@RequestParam(value = "page", 			defaultValue = "0") Integer page,
@@ -41,6 +42,7 @@ public class PlaceController {
         Page<PlaceDTO> list = placeService.getPlaces(pageRequest, name, address);
         return ResponseEntity.ok().body(list);
     }
+	*/
 
     @PostMapping
 	public ResponseEntity<PlaceDTO> insert(@RequestBody PlaceDTO placeDTO){

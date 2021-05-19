@@ -28,6 +28,7 @@ public class EventController {
     @Autowired
     private EventService eventService;
 
+	/*
 	@GetMapping
     public ResponseEntity<Page<EventDTO>> getEvents(
 		@RequestParam(value = "page", 			defaultValue = "0") Integer page,
@@ -43,7 +44,7 @@ public class EventController {
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction),orderBy);
         Page<EventDTO> list = eventService.getEvents(pageRequest, name, place, startDate, description);
         return ResponseEntity.ok().body(list);
-    }
+    }*/
 
     @PostMapping
 	public ResponseEntity<EventDTO> insert(@RequestBody EventDTO eventDTO){

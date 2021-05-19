@@ -17,18 +17,18 @@ public class EventDTO {
     private LocalTime endTime;
     private String emailContact;
 
-    private Integer amountFreeTickets; 
-    private Integer amountPayedTickets;
-    private Integer freeTickectsSelled;
-    private Integer payedTickectsSelled;
+    private Long amountFreeTickets; 
+    private Long amountPayedTickets;
+    private Long freeTickectsSelled;
+    private Long payedTickectsSelled;
     private Double priceTicket;
     
     public EventDTO() {
     }
 
     public EventDTO(Long id, String name, String description, /*String place,*/ LocalDate startDate, LocalDate endDate,
-            LocalTime startTime, LocalTime endTime, String emailContact, Integer amountFreeTickets, Integer amountPayedTickets,
-            Integer freeTickectsSelled, Integer payedTickectsSelled, Double priceTicket) {
+            LocalTime startTime, LocalTime endTime, String emailContact, Long amountFreeTickets, Long amountPayedTickets,
+            Long freeTickectsSelled, Long payedTickectsSelled, Double priceTicket) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -140,35 +140,35 @@ public class EventDTO {
 
 
 
-    public Integer getAmountFreeTickets() {
+    public Long getAmountFreeTickets() {
         return amountFreeTickets;
     }
 
-    public void setAmountFreeTickets(Integer amountFreeTickets) {
+    public void setAmountFreeTickets(Long amountFreeTickets) {
         this.amountFreeTickets = amountFreeTickets;
     }
 
-    public Integer getAmountPayedTickets() {
+    public Long getAmountPayedTickets() {
         return amountPayedTickets;
     }
 
-    public void setAmountPayedTickets(Integer amountPayedTickets) {
+    public void setAmountPayedTickets(Long amountPayedTickets) {
         this.amountPayedTickets = amountPayedTickets;
     }
 
-    public Integer getFreeTickectsSelled() {
+    public Long getFreeTickectsSelled() {
         return freeTickectsSelled;
     }
 
-    public void setFreeTickectsSelled(Integer freeTickectsSelled) {
+    public void setFreeTickectsSelled(Long freeTickectsSelled) {
         this.freeTickectsSelled = freeTickectsSelled;
     }
 
-    public Integer getPayedTickectsSelled() {
+    public Long getPayedTickectsSelled() {
         return payedTickectsSelled;
     }
 
-    public void setPayedTickectsSelled(Integer payedTickectsSelled) {
+    public void setPayedTickectsSelled(Long payedTickectsSelled) {
         this.payedTickectsSelled = payedTickectsSelled;
     }
 

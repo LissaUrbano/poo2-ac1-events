@@ -24,10 +24,11 @@ public class AdminService {
 
     private String msgNotFound = "Admin not found";
 
-    public Page<AdminDTO> getAdmins(PageRequest pageRequest, String name, String email, String phoneNumber) {
-        Page<Admin> list = adminRepository.findAdminsPageble(pageRequest, name, email, phoneNumber);
+    /*
+    public Page<AdminDTO> getAdmins(PageRequest pageRequest) {
+        Page<Admin> list = adminRepository.findAdminsPageble(pageRequest);
         return list.map( e -> new AdminDTO(e));
-    }
+    }*/
 
     public AdminDTO insert(AdminDTO adminDTO) {
         Admin admin = new Admin(adminDTO);

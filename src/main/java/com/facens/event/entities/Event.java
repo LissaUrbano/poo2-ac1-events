@@ -24,7 +24,8 @@ public class Event implements Serializable{
     private Long id;
     private String name;
     private String description;
-    //private String place;
+    //id FK
+    //private Place place;
 
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate startDate;
@@ -39,10 +40,10 @@ public class Event implements Serializable{
     private LocalTime endTime;
     private String emailContact;
 
-    private Integer amountFreeTickets; 
-    private Integer amountPayedTickets;
-    private Integer freeTickectsSelled;
-    private Integer payedTickectsSelled;
+    private Long amountFreeTickets; 
+    private Long amountPayedTickets;
+    private Long freeTickectsSelled;
+    private Long payedTickectsSelled;
     private Double priceTicket;
 
     public Event() {
@@ -120,35 +121,35 @@ public class Event implements Serializable{
 
     
 
-    public Integer getAmountFreeTickets() {
+    public Long getAmountFreeTickets() {
         return amountFreeTickets;
     }
 
-    public void setAmountFreeTickets(Integer amountFreeTickets) {
+    public void setAmountFreeTickets(Long amountFreeTickets) {
         this.amountFreeTickets = amountFreeTickets;
     }
 
-    public Integer getAmountPayedTickets() {
+    public Long getAmountPayedTickets() {
         return amountPayedTickets;
     }
 
-    public void setAmountPayedTickets(Integer amountPayedTickets) {
+    public void setAmountPayedTickets(Long amountPayedTickets) {
         this.amountPayedTickets = amountPayedTickets;
     }
 
-    public Integer getFreeTickectsSelled() {
+    public Long getFreeTickectsSelled() {
         return freeTickectsSelled;
     }
 
-    public void setFreeTickectsSelled(Integer freeTickectsSelled) {
+    public void setFreeTickectsSelled(Long freeTickectsSelled) {
         this.freeTickectsSelled = freeTickectsSelled;
     }
 
-    public Integer getPayedTickectsSelled() {
+    public Long getPayedTickectsSelled() {
         return payedTickectsSelled;
     }
 
-    public void setPayedTickectsSelled(Integer payedTickectsSelled) {
+    public void setPayedTickectsSelled(Long payedTickectsSelled) {
         this.payedTickectsSelled = payedTickectsSelled;
     }
 

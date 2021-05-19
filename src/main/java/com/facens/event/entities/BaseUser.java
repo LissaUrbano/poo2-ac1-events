@@ -1,25 +1,26 @@
 package com.facens.event.entities;
 
-import javax.persistence.Entity;
+import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.MappedSuperclass;
 
-@Entity
-@Table(name="TB_BASEUSER")
-public class BaseUser {
+@MappedSuperclass
+public abstract class BaseUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "PK_BASEUSER")
+    protected Long id;
+
     private String name;
     private String email;
 
-    public BaseUser() {
+    protected BaseUser() {
     }
 
-    public BaseUser(String name,String email) {
+    protected BaseUser(String name,String email) {
         this.name = name;
         this.email = email;
 	}
@@ -64,5 +65,4 @@ public class BaseUser {
             return false;
         return true;
     }
-
 }

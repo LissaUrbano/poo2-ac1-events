@@ -2,6 +2,8 @@ package com.facens.event.controllers;
 
 import java.net.URI;
 
+import javax.validation.Valid;
+
 import com.facens.event.dto.AdminDTO;
 import com.facens.event.services.AdminService;
 
@@ -28,23 +30,22 @@ public class AdminController {
     @Autowired
     private AdminService adminService;
 
+	/*
 	@GetMapping
     public ResponseEntity<Page<AdminDTO>> getAdmins(
 		@RequestParam(value = "page", 			defaultValue = "0") Integer page,
 		@RequestParam(value = "linesPerPage", 	defaultValue = "6") Integer linesPerPage,
 		@RequestParam(value = "direction", 		defaultValue = "ASC") String direction,
-		@RequestParam(value = "orderBy", 		defaultValue = "id") String orderBy,
-		@RequestParam(value = "name", 			defaultValue = "") String name,
-		@RequestParam(value = "email",          defaultValue = "") String email,	        
-		@RequestParam(value = "phoneNumber",      defaultValue = "") String phoneNumber
+		@RequestParam(value = "orderBy", 		defaultValue = "id") String orderBy
 	){
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction),orderBy);
-        Page<AdminDTO> list = adminService.getAdmins(pageRequest, name, email, phoneNumber);
+        Page<AdminDTO> list = adminService.getAdmins(pageRequest);
         return ResponseEntity.ok().body(list);
     }
+	*/
 
     @PostMapping
-	public ResponseEntity<AdminDTO> insert(@RequestBody AdminDTO adminDTO){
+	public ResponseEntity<AdminDTO> insert(@Valid @RequestBody AdminDTO adminDTO){
 		AdminDTO dto = adminService.insert(adminDTO); 
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
 		return ResponseEntity.created(uri).body(dto);
@@ -63,7 +64,7 @@ public class AdminController {
     }
 
     @PutMapping("{id}")
-	public ResponseEntity<AdminDTO> update(@RequestBody AdminDTO updateDto, @PathVariable Long id){
+	public ResponseEntity<AdminDTO> update(@Valid @RequestBody AdminDTO updateDto, @PathVariable Long id){
 		AdminDTO dto = adminService.update(id, updateDto); 
 		return ResponseEntity.ok().body(dto);
 	}

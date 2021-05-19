@@ -10,12 +10,12 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PlaceRepository extends JpaRepository<Place, Long> {
-    
+    /*
     @Query("SELECT e FROM TB_ADMIN e " 
     + "WHERE " 
     + "LOWER(e.name)        LIKE   LOWER(CONCAT('%', :name, '%'))        AND " 
     + "LOWER(e.address)       LIKE   LOWER(CONCAT('%', :address, '%'))"
     )
     public Page<Place> findPlacesPageble(Pageable pageRequest, String name, String address);
-
+    */
 }

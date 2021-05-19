@@ -11,11 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AttendRepository extends JpaRepository<Attend, Long> {
     
-    @Query("SELECT e FROM TB_ADMIN e " 
-    + "WHERE " 
-    + "LOWER(e.name)        LIKE   LOWER(CONCAT('%', :name, '%'))        AND " 
-    + "LOWER(e.email)       LIKE   LOWER(CONCAT('%', :email, '%'))"
-    )
-    public Page<Attend> findAttendeesPageble(Pageable pageRequest, String name, String email);
+    //@Query("SELECT e FROM TB_ATTEND e ")
+    //public Page<Attend> findAttendeesPageble(Pageable pageRequest);
 
 }

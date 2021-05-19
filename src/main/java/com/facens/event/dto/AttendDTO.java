@@ -1,12 +1,19 @@
 package com.facens.event.dto;
 
+import javax.validation.constraints.NotBlank;
+
 import com.facens.event.entities.Attend;
 
 public class AttendDTO {
 
     private Long id;
+
+    @NotBlank(message = "Name is mandatory")
     private String name;
+
+    @NotBlank(message = "E-mail is mandatory")
     private String email;
+    
     private Double balance;
 
     public AttendDTO() {
