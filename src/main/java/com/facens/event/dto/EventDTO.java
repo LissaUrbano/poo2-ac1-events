@@ -2,15 +2,17 @@ package com.facens.event.dto;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 import com.facens.event.entities.Event;
+import com.facens.event.entities.Place;
 
 public class EventDTO {
     
     private Long id;
     private String name;
     private String description;
-    //private String place;
+    private List<Place> place;
     private LocalDate startDate;
     private LocalDate endDate;
     private LocalTime startTime;
@@ -26,13 +28,13 @@ public class EventDTO {
     public EventDTO() {
     }
 
-    public EventDTO(Long id, String name, String description, /*String place,*/ LocalDate startDate, LocalDate endDate,
+    public EventDTO(Long id, String name, String description, List<Place> place, LocalDate startDate, LocalDate endDate,
             LocalTime startTime, LocalTime endTime, String emailContact, Long amountFreeTickets, Long amountPayedTickets,
             Long freeTickectsSelled, Long payedTickectsSelled, Double priceTicket) {
         this.id = id;
         this.name = name;
         this.description = description;
-        //this.place = place;
+        this.place = place;
         this.startDate = startDate;
         this.endDate = endDate;
         this.startTime = startTime;
@@ -49,7 +51,7 @@ public class EventDTO {
         setId(event.getId());
         setName(event.getName());
         setDescription(event.getDescription());
-        //setPlace(event.getPlace());
+        setPlace(event.getPlace());
         setStartDate(event.getStartDate());
         setEndDate(event.getEndDate());
         setStartTime(event.getStartTime());
@@ -86,15 +88,14 @@ public class EventDTO {
         this.description = description;
     }
 
-    /*
-    public String getPlace() {
+    public List<Place> getPlace() {
         return place;
     }
 
-    public void setPlace(String place) {
-        this.place = place;
+    public void setPlace(Place place) {
+        this.place.add(place);
     }
-    */
+
     public LocalDate getStartDate() {
         return startDate;
     }
@@ -135,11 +136,6 @@ public class EventDTO {
         this.emailContact = emailContact;
     }
 
-
-
-
-
-
     public Long getAmountFreeTickets() {
         return amountFreeTickets;
     }
@@ -179,13 +175,6 @@ public class EventDTO {
     public void setPriceTicket(Double priceTicket) {
         this.priceTicket = priceTicket;
     }
-
-
-
-
-
-    
-
 }
 
     

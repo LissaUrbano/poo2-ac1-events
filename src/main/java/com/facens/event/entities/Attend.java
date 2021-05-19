@@ -1,19 +1,26 @@
 package com.facens.event.entities;
 
-import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 import com.facens.event.dto.AttendDTO;
 
 @Entity
 @Table(name="TB_ATTEND")
-public class Attend extends BaseUser implements Serializable{
-
-    private static final long serialVersionUID = 1L;
+@PrimaryKeyJoinColumn(name = "USERBASE_ID")
+public class Attend extends BaseUser {
     
     private Double balance;
+
+    @OneToMany
+    @JoinColumn(name = "ATTEND_USERBASE_ID")
+    private List<Ticket> tickets = new ArrayList<>(); 
 
     public Attend() {
     }
@@ -30,28 +37,11 @@ public class Attend extends BaseUser implements Serializable{
         this.balance = balance;
     }
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        return result;
+    public List<Ticket> getTickets() {
+        return tickets;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        BaseUser other = (BaseUser) obj;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        return true;
+    public void addTickets(Ticket ticket) {
+        this.tickets.add(ticket);
     }
 }

@@ -1,11 +1,14 @@
 package com.facens.event.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import com.facens.event.dto.PlaceDTO;
@@ -21,6 +24,9 @@ public class Place implements Serializable{
     private Long id;
     private String name;
     private String address;
+    
+    @ManyToMany(mappedBy = "places")
+    private List<Event> events = new ArrayList<>();
 
     public Place() {
     }
@@ -44,6 +50,14 @@ public class Place implements Serializable{
     }
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public List<Event> getEvents() {
+        return events;
+    }
+
+    public void addEvents(Event event) {
+        this.events.add(event);
     }
 
     @Override

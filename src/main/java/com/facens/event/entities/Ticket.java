@@ -15,8 +15,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @Table(name="TB_TICKET")
 public class Ticket implements Serializable{
 
-    private static final long serialVersionUID = 1L;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -35,10 +33,6 @@ public class Ticket implements Serializable{
         this.type = type;
         this.instant = instant;
         this.price = price;
-    }
-
-    public static long getSerialversionuid() {
-        return serialVersionUID;
     }
 
     public Long getId() {
@@ -97,5 +91,4 @@ public class Ticket implements Serializable{
             return false;
         return true;
     }
-    
 }
