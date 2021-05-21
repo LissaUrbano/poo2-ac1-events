@@ -8,7 +8,10 @@ import java.util.Optional;
 import javax.persistence.EntityNotFoundException;
 
 import com.facens.event.dto.EventDTO;
+import com.facens.event.entities.Admin;
 import com.facens.event.entities.Event;
+import com.facens.event.entities.Place;
+import com.facens.event.repositories.AdminRepository;
 import com.facens.event.repositories.EventRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,18 +28,27 @@ public class EventService {
     @Autowired
     private EventRepository eventRepository;
 
+    @Autowired
+    private AdminRepository adminRepository;
+
     private String msgNotFound = "Event not found";
 
-    /*
-    public Page<EventDTO> getEvents(PageRequest pageRequest, String name, String place, String startDate, String description) {
+    public Page<EventDTO> getEvents(PageRequest pageRequest, String name, Place place, String startDate, String description) {
         LocalDate date = convertLocalDate(startDate);
         Page<Event> list = eventRepository.findEventsPageble(pageRequest, name, place, date, description);
         return list.map( e -> new EventDTO(e));
-    }*/
+    }
 
     public EventDTO insert(EventDTO eventDTO) {
         validarDataHora(eventDTO);
+        Admin admin;
+        try {
+            admin = adminRepository.findById(eventDTO.getAdmin()).get();
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O admin informado inválido");
+        }
         Event event = new Event(eventDTO);
+        event.setAdmin(admin);
         return new EventDTO(eventRepository.save(event));
     }
 
@@ -64,9 +76,6 @@ public class EventService {
             if(eventDTO.getDescription() != null) {
                 event.setDescription(eventDTO.getDescription());
             }
-            /*if(eventDTO.getPlace() != null) {
-                event.setPlace(eventDTO.getPlace());
-            }*/
             if(eventDTO.getStartDate() != null) {
                 event.setStartDate(eventDTO.getStartDate()); 
             }

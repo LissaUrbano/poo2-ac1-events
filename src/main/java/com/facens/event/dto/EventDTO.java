@@ -2,7 +2,12 @@ package com.facens.event.dto;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import com.facens.event.entities.Event;
 import com.facens.event.entities.Place;
@@ -10,31 +15,56 @@ import com.facens.event.entities.Place;
 public class EventDTO {
     
     private Long id;
+
+    @NotBlank(message = "Address is mandatory")
     private String name;
+
+    @NotBlank(message = "Description is mandatory")
     private String description;
-    private List<Place> place;
+
+    @NotNull(message = "Start Date is mandatory")
     private LocalDate startDate;
+
+    @NotNull(message = "End Date is mandatory")
     private LocalDate endDate;
+
+    @NotNull(message = "Start Time is mandatory")
     private LocalTime startTime;
+
+    @NotNull(message = "End Time is mandatory")
     private LocalTime endTime;
+
+    @Email
+    @NotBlank(message = "E-mail contact is mandatory")
     private String emailContact;
 
+    @NotNull(message = "Amount Free Tickets is mandatory")
     private Long amountFreeTickets; 
+
+    @NotNull(message = "Amount Payed Tickets is mandatory")
     private Long amountPayedTickets;
-    private Long freeTickectsSelled;
-    private Long payedTickectsSelled;
+
+    private Integer freeTickectsSelled;
+    private Integer payedTickectsSelled;
+
+    @NotNull(message = "Price Ticket is mandatory")
     private Double priceTicket;
+
+    private List<Place> places = new ArrayList<>(); 
+
+    @NotNull(message = "Admin Id is mandatory")
+    private Long admin;
     
     public EventDTO() {
     }
 
-    public EventDTO(Long id, String name, String description, List<Place> place, LocalDate startDate, LocalDate endDate,
+    public EventDTO(Long id, String name, String description, List<Place> places, LocalDate startDate, LocalDate endDate,
             LocalTime startTime, LocalTime endTime, String emailContact, Long amountFreeTickets, Long amountPayedTickets,
-            Long freeTickectsSelled, Long payedTickectsSelled, Double priceTicket) {
+            Integer freeTickectsSelled, Integer payedTickectsSelled, Double priceTicket, Long admin) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.place = place;
+        this.places = places;
         this.startDate = startDate;
         this.endDate = endDate;
         this.startTime = startTime;
@@ -45,13 +75,14 @@ public class EventDTO {
         this.freeTickectsSelled = freeTickectsSelled;
         this.payedTickectsSelled = payedTickectsSelled;
         this.priceTicket = priceTicket;
+        this.admin= admin;
     }
 
     public EventDTO(Event event) {
         setId(event.getId());
         setName(event.getName());
         setDescription(event.getDescription());
-        setPlace(event.getPlace());
+        setPlaces(event.getPlaces());
         setStartDate(event.getStartDate());
         setEndDate(event.getEndDate());
         setStartTime(event.getStartTime());
@@ -62,6 +93,7 @@ public class EventDTO {
         setFreeTickectsSelled(event.getFreeTickectsSelled());
         setPayedTickectsSelled(event.getPayedTickectsSelled());
         setPriceTicket(event.getPriceTicket());
+        setAdmin(event.getAdmin().getId());
 	}
 
     public Long getId() {
@@ -86,14 +118,6 @@ public class EventDTO {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public List<Place> getPlace() {
-        return place;
-    }
-
-    public void setPlace(Place place) {
-        this.place.add(place);
     }
 
     public LocalDate getStartDate() {
@@ -152,19 +176,19 @@ public class EventDTO {
         this.amountPayedTickets = amountPayedTickets;
     }
 
-    public Long getFreeTickectsSelled() {
+    public Integer getFreeTickectsSelled() {
         return freeTickectsSelled;
     }
 
-    public void setFreeTickectsSelled(Long freeTickectsSelled) {
+    public void setFreeTickectsSelled(Integer freeTickectsSelled) {
         this.freeTickectsSelled = freeTickectsSelled;
     }
 
-    public Long getPayedTickectsSelled() {
+    public Integer getPayedTickectsSelled() {
         return payedTickectsSelled;
     }
 
-    public void setPayedTickectsSelled(Long payedTickectsSelled) {
+    public void setPayedTickectsSelled(Integer payedTickectsSelled) {
         this.payedTickectsSelled = payedTickectsSelled;
     }
 
@@ -174,6 +198,22 @@ public class EventDTO {
 
     public void setPriceTicket(Double priceTicket) {
         this.priceTicket = priceTicket;
+    }
+
+    public List<Place> getPlaces() {
+        return places;
+    }
+
+    public void setPlaces(List<Place> places) {
+        this.places = places;
+    }
+
+    public Long getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(Long admin) {
+        this.admin = admin;
     }
 }
 

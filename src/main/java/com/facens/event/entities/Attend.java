@@ -3,6 +3,7 @@ package com.facens.event.entities;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
@@ -18,7 +19,7 @@ public class Attend extends BaseUser {
     
     private Double balance;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "ATTEND_USERBASE_ID")
     private List<Ticket> tickets = new ArrayList<>(); 
 
@@ -27,7 +28,7 @@ public class Attend extends BaseUser {
 
     public Attend(AttendDTO attendDTO) {
         super(attendDTO.getName(), attendDTO.getEmail());
-        this.balance = attendDTO.getBalance();
+        this.balance = 0.00;
 	}
 
     public Double getBalance() {

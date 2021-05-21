@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AdminRepository extends JpaRepository<Admin, Long> {
     
-    //@Query("SELECT e FROM TB_ADMIN e ")
-    //public Page<Admin> findAdminsPageble(Pageable pageRequest);
+    @Query("SELECT e FROM Admin e")
+    public Page<Admin> findAdminsPageble(Pageable pageRequest);
 
 }

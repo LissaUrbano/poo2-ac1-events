@@ -1,11 +1,17 @@
 package com.facens.event.dto;
 
+import javax.validation.constraints.NotBlank;
+
 import com.facens.event.entities.Place;
 
 public class PlaceDTO {
 
     private Long id;
+
+    @NotBlank(message = "Name is mandatory")
     private String name;
+
+    @NotBlank(message = "Address is mandatory")
     private String address;
 
     public PlaceDTO() {

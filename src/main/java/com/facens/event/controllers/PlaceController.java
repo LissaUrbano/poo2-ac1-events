@@ -2,6 +2,8 @@ package com.facens.event.controllers;
 
 import java.net.URI;
 
+import javax.validation.Valid;
+
 import com.facens.event.dto.PlaceDTO;
 import com.facens.event.services.PlaceService;
 
@@ -28,7 +30,6 @@ public class PlaceController {
     @Autowired
     private PlaceService placeService;
 
-	/*
 	@GetMapping
     public ResponseEntity<Page<PlaceDTO>> getPlaces(
 		@RequestParam(value = "page", 			defaultValue = "0") Integer page,
@@ -42,10 +43,9 @@ public class PlaceController {
         Page<PlaceDTO> list = placeService.getPlaces(pageRequest, name, address);
         return ResponseEntity.ok().body(list);
     }
-	*/
 
     @PostMapping
-	public ResponseEntity<PlaceDTO> insert(@RequestBody PlaceDTO placeDTO){
+	public ResponseEntity<PlaceDTO> insert(@Valid @RequestBody PlaceDTO placeDTO){
 		PlaceDTO dto = placeService.insert(placeDTO); 
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
 		return ResponseEntity.created(uri).body(dto);

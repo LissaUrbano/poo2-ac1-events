@@ -6,6 +6,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -44,14 +45,14 @@ public class Event implements Serializable{
 
     private Long amountFreeTickets; 
     private Long amountPayedTickets;
-    private Long freeTickectsSelled;
-    private Long payedTickectsSelled;
+    private Integer freeTickectsSelled;
+    private Integer payedTickectsSelled;
     private Double priceTicket;
 
     @ManyToMany
     private List<Place> places = new ArrayList<>(); 
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "EVENT_ID")
     private List<Ticket> tickets = new ArrayList<>(); 
 
@@ -65,7 +66,7 @@ public class Event implements Serializable{
     public Event(EventDTO eventDTO) {
         this.name = eventDTO.getName();
         this.description = eventDTO.getDescription();
-        this.places = eventDTO.getPlace();
+        this.places = eventDTO.getPlaces();
         this.startDate = eventDTO.getStartDate();
         this.endDate = eventDTO.getEndDate();
         this.startTime = eventDTO.getStartTime();
@@ -73,8 +74,8 @@ public class Event implements Serializable{
         this.emailContact = eventDTO.getEmailContact();
         this.amountFreeTickets = eventDTO.getAmountFreeTickets();
         this.amountPayedTickets = eventDTO.getAmountPayedTickets();
-        this.freeTickectsSelled = eventDTO.getFreeTickectsSelled();
-        this.payedTickectsSelled = eventDTO.getPayedTickectsSelled();
+        this.freeTickectsSelled = 0;
+        this.payedTickectsSelled = 0;
         this.priceTicket = eventDTO.getPriceTicket();
 	}
 
@@ -147,19 +148,19 @@ public class Event implements Serializable{
         this.amountPayedTickets = amountPayedTickets;
     }
 
-    public Long getFreeTickectsSelled() {
+    public Integer getFreeTickectsSelled() {
         return freeTickectsSelled;
     }
 
-    public void setFreeTickectsSelled(Long freeTickectsSelled) {
+    public void setFreeTickectsSelled(Integer freeTickectsSelled) {
         this.freeTickectsSelled = freeTickectsSelled;
     }
 
-    public Long getPayedTickectsSelled() {
+    public Integer getPayedTickectsSelled() {
         return payedTickectsSelled;
     }
 
-    public void setPayedTickectsSelled(Long payedTickectsSelled) {
+    public void setPayedTickectsSelled(Integer payedTickectsSelled) {
         this.payedTickectsSelled = payedTickectsSelled;
     }
 

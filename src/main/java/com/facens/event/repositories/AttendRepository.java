@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AttendRepository extends JpaRepository<Attend, Long> {
     
-    //@Query("SELECT e FROM TB_ATTEND e ")
-    //public Page<Attend> findAttendeesPageble(Pageable pageRequest);
+    @Query("SELECT a FROM Attend a")
+    public Page<Attend> findAttendeesPageble(Pageable pageRequest);
 
 }

@@ -30,7 +30,6 @@ public class AdminController {
     @Autowired
     private AdminService adminService;
 
-	/*
 	@GetMapping
     public ResponseEntity<Page<AdminDTO>> getAdmins(
 		@RequestParam(value = "page", 			defaultValue = "0") Integer page,
@@ -42,7 +41,6 @@ public class AdminController {
         Page<AdminDTO> list = adminService.getAdmins(pageRequest);
         return ResponseEntity.ok().body(list);
     }
-	*/
 
     @PostMapping
 	public ResponseEntity<AdminDTO> insert(@Valid @RequestBody AdminDTO adminDTO){
@@ -64,7 +62,7 @@ public class AdminController {
     }
 
     @PutMapping("{id}")
-	public ResponseEntity<AdminDTO> update(@Valid @RequestBody AdminDTO updateDto, @PathVariable Long id){
+	public ResponseEntity<AdminDTO> update(@RequestBody AdminDTO updateDto, @PathVariable Long id){
 		AdminDTO dto = adminService.update(id, updateDto); 
 		return ResponseEntity.ok().body(dto);
 	}

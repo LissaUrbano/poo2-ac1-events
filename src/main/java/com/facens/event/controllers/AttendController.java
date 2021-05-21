@@ -30,7 +30,6 @@ public class AttendController {
     @Autowired
     private AttendService attendService;
 
-	/*
 	@GetMapping
     public ResponseEntity<Page<AttendDTO>> getAttends(
 		@RequestParam(value = "page", 			defaultValue = "0") Integer page,
@@ -41,7 +40,7 @@ public class AttendController {
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction),orderBy);
         Page<AttendDTO> list = attendService.getAttends(pageRequest);
         return ResponseEntity.ok().body(list);
-    }*/
+    }
 
     @PostMapping
 	public ResponseEntity<AttendDTO> insert(@Valid @RequestBody AttendDTO attendDTO){
@@ -63,9 +62,8 @@ public class AttendController {
     }
 
     @PutMapping("{id}")
-	public ResponseEntity<AttendDTO> update(@Valid @RequestBody AttendDTO updateDto, @PathVariable Long id){
+	public ResponseEntity<AttendDTO> update(@RequestBody AttendDTO updateDto, @PathVariable Long id){
 		AttendDTO dto = attendService.update(id, updateDto); 
 		return ResponseEntity.ok().body(dto);
 	}
-    
 }
