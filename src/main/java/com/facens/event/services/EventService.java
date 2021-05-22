@@ -3,16 +3,22 @@ package com.facens.event.services;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.EntityNotFoundException;
 
 import com.facens.event.dto.EventDTO;
+import com.facens.event.dto.TicketPostDTO;
 import com.facens.event.entities.Admin;
 import com.facens.event.entities.Event;
 import com.facens.event.entities.Place;
+import com.facens.event.entities.Ticket;
+import com.facens.event.entities.TypeTicket;
 import com.facens.event.repositories.AdminRepository;
 import com.facens.event.repositories.EventRepository;
+import com.facens.event.repositories.PlaceRepository;
+import com.facens.event.repositories.TicketRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -30,6 +36,12 @@ public class EventService {
 
     @Autowired
     private AdminRepository adminRepository;
+
+    @Autowired
+    private PlaceRepository placeRepository;
+
+    @Autowired
+    private TicketRepository ticketRepository;
 
     private String msgNotFound = "Event not found";
 
@@ -77,15 +89,19 @@ public class EventService {
                 event.setDescription(eventDTO.getDescription());
             }
             if(eventDTO.getStartDate() != null) {
+                eventAvailable(event);
                 event.setStartDate(eventDTO.getStartDate()); 
             }
             if(eventDTO.getEndDate() != null) {
+                eventAvailable(event);
                 event.setEndDate(eventDTO.getEndDate());
             }
             if(eventDTO.getStartTime() != null) {
+                eventAvailable(event);
                 event.setStartTime(eventDTO.getStartTime());
             }
             if(eventDTO.getEndTime() != null) {
+                eventAvailable(event);
                 event.setEndTime(eventDTO.getEndTime()); 
             }
             if(eventDTO.getEmailContact() != null) {
@@ -132,6 +148,114 @@ public class EventService {
         } else {
             return LocalDate.of(2000, 01, 01) ; //date default caso null
         }     
+    }
+
+    
+	//****************** ITEM 01 - AF **********************
+	public void associatePlaceEvent(Long eventId, Long placeId) {
+        Optional<Event> opEvent = eventRepository.findById(eventId);
+        Event event = opEvent.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, msgNotFound));
+
+        eventAvailable(event);
+
+        Optional<Place> opPlace = placeRepository.findById(placeId);
+        Place place = opPlace.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Place not found"));
+
+        if (!existPlaceInEvent(event, place)) {
+            placeAvailable(event, place);
+            event.addPlaces(place);
+            eventRepository.save(event);
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Local já cadastrado no evento");
+        }
+	}
+
+    public void removePlaceEvent(Long eventId, Long placeId) {
+        Optional<Event> opEvent = eventRepository.findById(eventId);
+        Event event = opEvent.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, msgNotFound));
+
+        eventAvailable(event);
+
+        Optional<Place> opPlace = placeRepository.findById(placeId);
+        Place place = opPlace.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Place not found"));
+
+        if (existPlaceInEvent(event, place)) {
+            event.removePlaces(place);
+            eventRepository.save(event);
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Local não cadastrado no evento");
+        }
+    }
+
+    private void eventAvailable(Event event){
+        if (event.getStartDate().isBefore(LocalDate.now()) || event.getStartDate().isEqual(LocalDate.now())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O evento já foi iniciado e não pode ser modificado");
+        }
+    }
+
+    private boolean existPlaceInEvent(Event event, Place place){
+        List<Place> placesEvent = event.getPlaces();
+        
+        for (Place place2 : placesEvent) {
+            if (place2.equals(place)) {
+                return true;
+            } 
+        }
+        return false;
+    }
+
+    private void placeAvailable(Event event, Place place) {
+        LocalDate startDate = event.getStartDate();
+        LocalDate endDate = event.getEndDate();
+
+        List<Event> eventsPlace = place.getEvents();
+
+        for (Event eventplace : eventsPlace) {
+            if (startDate.isBefore(eventplace.getStartDate()) && endDate.isBefore(eventplace.getStartDate()) ||
+                startDate.isAfter(eventplace.getEndDate()) && endDate.isAfter(eventplace.getEndDate()) ) {
+            } else {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Local não disponivel para a data do evento");
+            }
+        }
+    }
+
+    //****************** ITEM 03 - AF **********************
+	//Vende um ingresso para um evento.
+	//Passar o id do participante no corpo da requisição.
+	//Passar se o ingresso é pago ou gratuito no corpo da requisição.
+	//Validar se é possível fazer a venda.
+    public void sellTicket(TicketPostDTO ticketDto, Long eventId) {
+        Event event;
+        try {
+            event = eventRepository.findById(eventId).get();
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O evento informado não existe");
+        }
+
+        eventAvailable(event);
+        Ticket ticket = new Ticket(ticketDto);
+
+        if (ticket.getType().equals(TypeTicket.FREE)) {
+            if (event.getFreeTickectsSelled() < event.getAmountFreeTickets()) {
+                event.addTickets(ticket);
+                event.setFreeTickectsSelled(event.getFreeTickectsSelled()+1);
+                ticket.setPrice(0.00);
+            }
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Os ingressos gratuitos esgotaram para este evento");
+        } else if (ticket.getType().equals(TypeTicket.PAYED)){
+            if (event.getPayedTickectsSelled() < event.getAmountPayedTickets()) {
+                event.addTickets(ticket);
+                event.setPayedTickectsSelled(event.getPayedTickectsSelled()+1);
+                ticket.setPrice(event.getPriceTicket());
+            }
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Os ingressos pagos esgotaram para este evento");
+        }
+        ticketRepository.save(ticket);
+        eventRepository.save(event);
+    }
+
+    //Na devolução de um ingresso pago, criar saldo para o participante.
+    public void returnTicket(Long eventId) { //TODO
     }
 
 }

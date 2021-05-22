@@ -1,7 +1,7 @@
 package com.facens.event.entities;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.Instant;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.facens.event.dto.TicketPostDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
@@ -22,17 +23,16 @@ public class Ticket implements Serializable{
     private TypeTicket type;
 
     @JsonFormat(pattern = "dd/MM/yyyy")
-    private LocalDate instant;
+    private Instant date;
 
     private Double price;
 
     public Ticket() {
     }
 
-    public Ticket(TypeTicket type, LocalDate instant, Double price) {
-        this.type = type;
-        this.instant = instant;
-        this.price = price;
+    public Ticket(TicketPostDTO ticketDTO) {
+        this.type = ticketDTO.getType();
+        this.date = Instant.now();
     }
 
     public Long getId() {
@@ -51,12 +51,12 @@ public class Ticket implements Serializable{
         this.type = type;
     }
 
-    public LocalDate getInstant() {
-        return instant;
+    public Instant getDate() {
+        return date;
     }
 
-    public void setInstant(LocalDate instant) {
-        this.instant = instant;
+    public void setDate(Instant date) {
+        this.date = date;
     }
 
     public Double getPrice() {

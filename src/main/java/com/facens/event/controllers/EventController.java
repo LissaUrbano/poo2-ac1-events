@@ -6,6 +6,7 @@ import javax.validation.Valid;
 
 import com.facens.event.dto.EventDTO;
 import com.facens.event.dto.PlaceDTO;
+import com.facens.event.dto.TicketPostDTO;
 import com.facens.event.entities.Place;
 import com.facens.event.services.EventService;
 
@@ -72,6 +73,54 @@ public class EventController {
 	public ResponseEntity<EventDTO> update(@Valid @RequestBody EventDTO updateDto, @PathVariable Long id){
 		EventDTO dto = eventService.update(id, updateDto); 
 		return ResponseEntity.ok().body(dto);
+	}
+
+
+
+
+
+
+	//****************** ITEM 01 - AF **********************
+	//Associar ou remover um local a um evento.
+	//Validar evento e local.
+	//Validar disponibilidade.
+	@PostMapping("{eventId}/places/{placeId}")
+	public ResponseEntity<Void> associatePlaceEvent(@PathVariable Long eventId, @PathVariable Long placeId){
+		eventService.associatePlaceEvent(eventId, placeId); 
+		return ResponseEntity.ok().build();
+	}
+
+	@DeleteMapping("{eventId}/places/{placeId}")
+	public ResponseEntity<Void> removePlaceEvent(@PathVariable Long eventId, @PathVariable Long placeId){
+		eventService.removePlaceEvent(eventId, placeId); 
+		return ResponseEntity.ok().build();
+	}
+
+	//****************** ITEM 02 - AF **********************
+	//Devolve a lista de ingressos de um evento, tendo o tipo do ingresso e nome dos participantes.
+	//Devolve o total de ingressos pagos, total de ingressos gratuitos, total de ingressos pagos já vendidos, total de ingressos gratuitos já vendidos.
+
+	@GetMapping("{id}/tickets")
+    public ResponseEntity<Void> getTickets(@PathVariable Long id){ //TODO
+        return null; 
+    }
+
+	//****************** ITEM 03 - AF **********************
+	//Vende um ingresso para um evento.
+	//Passar o id do participante no corpo da requisição.
+	//Passar se o ingresso é pago ou gratuito no corpo da requisição.
+	//Validar se é possível fazer a venda.
+	@PostMapping("{id}/tickets")
+	public ResponseEntity<Void> sellTicket(@RequestBody TicketPostDTO ticketDto, @PathVariable Long eventId){
+		eventService.sellTicket(ticketDto, eventId); 
+		return ResponseEntity.ok().build();
+	}
+
+	//Na devolução de um ingresso pago, criar saldo para o participante.
+	@DeleteMapping("{id}/tickets")
+	public ResponseEntity<Void> returnTicket(@PathVariable Long ticketId){
+		eventService.returnTicket(ticketId); 
+		return ResponseEntity.ok().build();
 	}
     
 }
