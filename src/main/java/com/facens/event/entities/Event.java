@@ -19,6 +19,7 @@ import javax.persistence.Table;
 
 import com.facens.event.dto.EventDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="TB_EVENT")
@@ -49,6 +50,7 @@ public class Event implements Serializable{
     private Integer payedTickectsSelled;
     private Double priceTicket;
 
+    @JsonIgnore
     @ManyToMany
     private List<Place> places = new ArrayList<>(); 
 

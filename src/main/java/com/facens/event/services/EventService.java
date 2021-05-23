@@ -45,9 +45,9 @@ public class EventService {
 
     private String msgNotFound = "Event not found";
 
-    public Page<EventDTO> getEvents(PageRequest pageRequest, String name, Place place, String startDate, String description) {
+    public Page<EventDTO> getEvents(PageRequest pageRequest, String name, /*Place place*/ String startDate, String description) {
         LocalDate date = convertLocalDate(startDate);
-        Page<Event> list = eventRepository.findEventsPageble(pageRequest, name, place, date, description);
+        Page<Event> list = eventRepository.findEventsPageble(pageRequest, name, /*place*/ date, description);
         return list.map( e -> new EventDTO(e));
     }
 
@@ -138,7 +138,7 @@ public class EventService {
 
     private LocalDate convertLocalDate(String startDate) {
         if (!startDate.isEmpty()) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");    
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");    
             try {
                 LocalDate date = LocalDate.parse(startDate, formatter);
                 return date;

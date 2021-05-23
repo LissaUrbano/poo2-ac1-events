@@ -5,7 +5,6 @@ import java.net.URI;
 import javax.validation.Valid;
 
 import com.facens.event.dto.EventDTO;
-import com.facens.event.dto.PlaceDTO;
 import com.facens.event.dto.TicketPostDTO;
 import com.facens.event.entities.Place;
 import com.facens.event.services.EventService;
@@ -40,13 +39,13 @@ public class EventController {
 		@RequestParam(value = "direction", 		defaultValue = "ASC") String direction,
 		@RequestParam(value = "orderBy", 		defaultValue = "id") String orderBy,
 		@RequestParam(value = "name", 			defaultValue = "") String name,
-		@RequestParam(value = "place",          defaultValue = "") Place place,	        
+		//@RequestParam(value = "place",          defaultValue = "") Place place,	        
 		@RequestParam(value = "startDate",      defaultValue = "") String startDate,
 	    @RequestParam(value = "description",    defaultValue = "") String description
 
 	){
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction),orderBy);
-        Page<EventDTO> list = eventService.getEvents(pageRequest, name, place, startDate, description);
+        Page<EventDTO> list = eventService.getEvents(pageRequest, name, /*place,*/ startDate, description);
         return ResponseEntity.ok().body(list);
     }
 
