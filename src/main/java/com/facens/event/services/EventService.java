@@ -45,9 +45,9 @@ public class EventService {
 
     private String msgNotFound = "Event not found";
 
-    public Page<EventDTO> getEvents(PageRequest pageRequest, String name, String namePlace, String startDate, String description) {
+    public Page<EventDTO> getEvents(PageRequest pageRequest, String name, /*String namePlace,*/ String startDate, String description) {
         LocalDate date = convertLocalDate(startDate);
-        Page<Event> list = eventRepository.findEventsPageble(pageRequest, name, namePlace, date, description);
+        Page<Event> list = eventRepository.findEventsPageble(pageRequest, name, /*namePlace,*/ date, description);
         return list.map( e -> new EventDTO(e));
     }
 
