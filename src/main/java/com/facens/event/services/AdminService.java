@@ -1,12 +1,15 @@
 package com.facens.event.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.EntityNotFoundException;
 
 import com.facens.event.dto.AdminDTO;
 import com.facens.event.entities.Admin;
+import com.facens.event.entities.Event;
 import com.facens.event.repositories.AdminRepository;
+import com.facens.event.repositories.EventRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -22,6 +25,9 @@ public class AdminService {
     @Autowired
     private AdminRepository adminRepository;
 
+    @Autowired
+    private EventRepository eventRepository;
+
     private String msgNotFound = "Admin not found";
 
     public Page<AdminDTO> getAdmins(PageRequest pageRequest) {
@@ -36,6 +42,13 @@ public class AdminService {
 
     public void delete(Long id) {
         try {
+            //Admin admin = adminRepository.getOne(id);
+            List<Event> events = eventRepository.findAll();
+            for (Event event : events) {
+                if (event.getAdmin().getId().equals(id)) {
+                    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Admin possui eventos cadastrados");
+                }
+            }
             adminRepository.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, msgNotFound);
@@ -69,4 +82,6 @@ public class AdminService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, msgNotFound);
         }
     }
+
+
 }
