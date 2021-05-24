@@ -15,8 +15,7 @@ Lissa Bruna Urbano - 120780
 ```json
 {
     "name": "attend4",
-    "email": "attend4@gmail.com",
-    "balance": 0.0
+    "email": "attend4@gmail.com"
 }
 ```
 
@@ -25,8 +24,8 @@ Lissa Bruna Urbano - 120780
 {
     "name": "Festa Fantasia",
     "description": "Festa Fantasia",
-    "startDate": "2021-05-23",
-    "endDate": "2021-05-25",
+    "startDate": "2021-06-10",
+    "endDate": "2021-06-12",
     "startTime": "19:00:00",
     "endTime": "23:59:00",
     "emailContact": "festafantasia@gmail.com",
