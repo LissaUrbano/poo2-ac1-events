@@ -31,10 +31,10 @@ public class Event implements Serializable{
     private String name;
     private String description;
 
-    @JsonFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "yyyy/MM/dd")
     private LocalDate startDate;
 
-    @JsonFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "yyyy/MM/dd")
     private LocalDate endDate;
 
     @JsonFormat(pattern = "HH:mm")

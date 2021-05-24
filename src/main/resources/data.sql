@@ -1,35 +1,37 @@
-INSERT INTO TB_BASEUSER (EMAIL, NAME) VALUES ('testeadmin@gmail.com', 'admin teste');
+/* ADMIN ======================== */
+INSERT INTO TB_BASEUSER (EMAIL, NAME) VALUES ('admin1@gmail.com', 'admin1');
 INSERT INTO TB_ADMIN    (PHONE_NUMBER, USERBASE_ID ) VALUES ('(15)996444449', 1);
 
-INSERT INTO TB_BASEUSER (EMAIL, NAME) VALUES ('testeadmin2@gmail.com', 'admin teste2');
-INSERT INTO TB_ADMIN    (PHONE_NUMBER, USERBASE_ID ) VALUES ('(15)996444449', 2);
+INSERT INTO TB_BASEUSER (EMAIL, NAME) VALUES ('admin2@gmail.com', 'admin2');
+INSERT INTO TB_ADMIN    (PHONE_NUMBER, USERBASE_ID ) VALUES ('(15)996444448', 2);
 
+INSERT INTO TB_BASEUSER (EMAIL, NAME) VALUES ('admin3@gmail.com', 'admin3');
+INSERT INTO TB_ADMIN    (PHONE_NUMBER, USERBASE_ID ) VALUES ('(15)996444447', 3);
 
-
-INSERT INTO TB_BASEUSER (EMAIL, NAME) VALUES ('testeattend@gmail.com', 'attends teste');
-INSERT INTO TB_ATTEND   (BALANCE, USERBASE_ID ) VALUES (0.00, 3);
-
-INSERT INTO TB_BASEUSER (EMAIL, NAME) VALUES ('testeattend@gmail.com', 'attends teste2');
+/* ATTEND ======================= */
+INSERT INTO TB_BASEUSER (EMAIL, NAME) VALUES ('attend1@gmail.com', 'attend1');
 INSERT INTO TB_ATTEND   (BALANCE, USERBASE_ID ) VALUES (0.00, 4);
 
+INSERT INTO TB_BASEUSER (EMAIL, NAME) VALUES ('attend2@gmail.com', 'attend2');
+INSERT INTO TB_ATTEND   (BALANCE, USERBASE_ID ) VALUES (0.00, 5);
 
+INSERT INTO TB_BASEUSER (EMAIL, NAME) VALUES ('attend3@gmail.com', 'attend3');
+INSERT INTO TB_ATTEND   (BALANCE, USERBASE_ID ) VALUES (0.00, 6);
 
+/* PLACE  ======================= */
 INSERT INTO TB_PLACE    (ADDRESS, NAME) VALUES ('Rua X', 'Chacara x');
 INSERT INTO TB_PLACE    (ADDRESS, NAME) VALUES ('Rua Y', 'Chacara y');
 INSERT INTO TB_PLACE    (ADDRESS, NAME) VALUES ('Rua Z', 'Chacara z');
 
-
-
+/* EVENT ======================= */
 INSERT INTO TB_EVENT    (AMOUNT_FREE_TICKETS, AMOUNT_PAYED_TICKETS, DESCRIPTION, EMAIL_CONTACT, END_DATE, END_TIME, FREE_TICKECTS_SELLED, NAME, PAYED_TICKECTS_SELLED, PRICE_TICKET, START_DATE, START_TIME, ADMIN_USERBASE_ID) VALUES
-                        (50, 150, 'festa da feijuca', 'festatest@gmail.com', '2021-05-25', '23:59', 0, 'feijuca', 0, 150.00, '2021-05-22', '19:00', 1);
+                        (50, 150, 'Festa Junina', 'festajunina@gmail.com', '2021-06-12', '23:59', 0, 'Festa Junina', 0, 150.00, '2021-06-10', '19:00', 1);
 
 INSERT INTO TB_EVENT    (AMOUNT_FREE_TICKETS, AMOUNT_PAYED_TICKETS, DESCRIPTION, EMAIL_CONTACT, END_DATE, END_TIME, FREE_TICKECTS_SELLED, NAME, PAYED_TICKECTS_SELLED, PRICE_TICKET, START_DATE, START_TIME, ADMIN_USERBASE_ID) VALUES                        
-                        (20, 100, 'niver da vi', 'festatest@gmail.com', '2021-05-30', '23:59', 0, 'feijuca', 0, 100.00, '2021-05-26', '17:00', 2);
+                        (20, 100, 'Festa do Vinho', 'festadovinho@gmail.com', '2021-06-16', '23:59', 0, 'Festa do Vinho', 0, 100.00, '2021-06-15', '17:00', 2);
 
-
-INSERT INTO TB_EVENT_PLACES (EVENTS_ID, PLACES_ID) VALUES (1, 2);
-INSERT INTO TB_EVENT_PLACES (EVENTS_ID, PLACES_ID) VALUES (2, 3);    
-
+INSERT INTO TB_EVENT    (AMOUNT_FREE_TICKETS, AMOUNT_PAYED_TICKETS, DESCRIPTION, EMAIL_CONTACT, END_DATE, END_TIME, FREE_TICKECTS_SELLED, NAME, PAYED_TICKECTS_SELLED, PRICE_TICKET, START_DATE, START_TIME, ADMIN_USERBASE_ID) VALUES                        
+                        (20, 100, 'Festa da Feijoada', 'festadafeijoada@gmail.com', '2021-06-05', '23:59', 0, 'Festa da Feijoada', 0, 100.00, '2021-06-01', '17:00', 3);
 
 
 
