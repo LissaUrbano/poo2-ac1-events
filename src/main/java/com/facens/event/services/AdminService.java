@@ -42,11 +42,10 @@ public class AdminService {
 
     public void delete(Long id) {
         try {
-            //Admin admin = adminRepository.getOne(id);
             List<Event> events = eventRepository.findAll();
             for (Event event : events) {
                 if (event.getAdmin().getId().equals(id)) {
-                    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Admin possui eventos cadastrados");
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Admin possui eventos cadastrados");
                 }
             }
             adminRepository.deleteById(id);
