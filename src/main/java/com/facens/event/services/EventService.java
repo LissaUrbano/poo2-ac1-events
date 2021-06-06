@@ -11,11 +11,13 @@ import javax.persistence.EntityNotFoundException;
 import com.facens.event.dto.EventDTO;
 import com.facens.event.dto.TicketPostDTO;
 import com.facens.event.entities.Admin;
+import com.facens.event.entities.Attend;
 import com.facens.event.entities.Event;
 import com.facens.event.entities.Place;
 import com.facens.event.entities.Ticket;
 import com.facens.event.entities.TypeTicket;
 import com.facens.event.repositories.AdminRepository;
+import com.facens.event.repositories.AttendRepository;
 import com.facens.event.repositories.EventRepository;
 import com.facens.event.repositories.PlaceRepository;
 import com.facens.event.repositories.TicketRepository;
@@ -42,6 +44,9 @@ public class EventService {
 
     @Autowired
     private TicketRepository ticketRepository;
+
+    @Autowired
+    private AttendRepository attendRepository;
 
     private String msgNotFound = "Event not found";
 
@@ -188,7 +193,7 @@ public class EventService {
     }
 
     private void eventAvailable(Event event){
-        if (event.getStartDate().isBefore(LocalDate.now()) || event.getStartDate().isEqual(LocalDate.now())) {
+        if (event.getStartDate().isBefore(LocalDate.now()) || event.getStartDate().isEqual(LocalDate.now()) && event.getStartTime().isAfter(LocalTime.now())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O evento já foi iniciado e não pode ser modificado");
         }
     }
@@ -233,6 +238,7 @@ public class EventService {
         }
 
         eventAvailable(event);
+        validateTicket(ticketDto.getType());
         Ticket ticket = new Ticket(ticketDto);
 
         if (ticket.getType().equals(TypeTicket.FREE)) {
@@ -250,12 +256,57 @@ public class EventService {
             }
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Os ingressos pagos esgotaram para este evento");
         }
-        ticketRepository.save(ticket);
+        
+        Optional<Attend> opAttend = attendRepository.findById(ticketDto.getAttend());
+        Attend attend = opAttend.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Attend not found"));
+        attend.addTickets(ticket);
+      
         eventRepository.save(event);
+        attendRepository.save(attend);
+    }
+
+    private void validateTicket(TypeTicket type) {
+        if (!type.equals(TypeTicket.FREE) && !type.equals(TypeTicket.PAYED)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tipo de ingresso inválido");
+        } 
     }
 
     //Na devolução de um ingresso pago, criar saldo para o participante.
-    public void returnTicket(Long eventId) { //TODO
+    public void returnTicket(Long eventId, Long ticketId) { 
+        Event event;
+        try {
+            event = eventRepository.findById(eventId).get();
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O evento informado não existe");
+        }
+
+        eventAvailable(event);
+
+        Optional<Ticket> opTicket = ticketRepository.findById(ticketId);
+        Ticket ticketSelled = opTicket.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Ticket not found"));
+
+        List<Attend> attendList = attendRepository.findAll();
+        Attend attend = null;
+
+        for (Attend attendCurrent : attendList) {
+            for (Ticket ticket : attendCurrent.getTickets()) {
+                if (ticket.equals(ticketSelled)) {
+                    attend = attendCurrent;
+                    attend.setBalance(attend.getBalance() + ticket.getPrice());
+                    attend.removeTicket(ticket);
+                }
+            }
+        }
+
+        attendRepository.save(attend);
+
+        if (ticketSelled.getType() == TypeTicket.FREE) {
+            event.setAmountFreeTickets(event.getAmountFreeTickets() + 1);
+        } else {
+            event.setAmountPayedTickets(event.getAmountPayedTickets() + 1);
+        }
+
+        eventRepository.save(event);
     }
 
 }
