@@ -1,5 +1,7 @@
 package com.facens.event.repositories;
 
+import java.util.Optional;
+
 import com.facens.event.entities.Attend;
 
 import org.springframework.data.domain.Page;
@@ -13,5 +15,7 @@ public interface AttendRepository extends JpaRepository<Attend, Long> {
     
     @Query("SELECT a FROM Attend a")
     public Page<Attend> findAttendeesPageble(Pageable pageRequest);
+
+    Optional<Attend> findAdminByEmail(String email);
 
 }

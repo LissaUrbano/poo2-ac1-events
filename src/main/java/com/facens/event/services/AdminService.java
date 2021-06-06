@@ -36,6 +36,7 @@ public class AdminService {
     }
 
     public AdminDTO insert(AdminDTO adminDTO) {
+        validateEmailAdmin(adminDTO);
         Admin admin = new Admin(adminDTO);
         return new AdminDTO(adminRepository.save(admin));
     }
@@ -60,20 +61,20 @@ public class AdminService {
         return new AdminDTO(admin);
     }
 
-    public AdminDTO update(Long id, AdminDTO adminDTO) { 
+    public AdminDTO update(Long id, AdminDTO adminDTO) {
         try {
             Admin admin = adminRepository.getOne(id);
             //não seta valores Null que vieram do DTO
-            if(adminDTO.getName() != null) {
+            if (adminDTO.getName() != null) {
                 admin.setName(adminDTO.getName());
             }
-            if(adminDTO.getPhoneNumber() != null) {
-                admin.setPhoneNumber(adminDTO.getPhoneNumber()); 
+            if (adminDTO.getPhoneNumber() != null) {
+                admin.setPhoneNumber(adminDTO.getPhoneNumber());
             }
-            if(adminDTO.getEmail() != null) {
+            if (adminDTO.getEmail() != null) {
                 admin.setEmail(adminDTO.getEmail());
             }
-            
+
             admin = adminRepository.save(admin);
             return new AdminDTO(admin);
 
@@ -82,5 +83,12 @@ public class AdminService {
         }
     }
 
+    // Validação do Email - Admin
+    public void validateEmailAdmin(AdminDTO adminDTO){
+        Optional<Admin> admin = adminRepository.findAdminByEmail(adminDTO.getEmail());
+        if(admin.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Já possui admin com esse email");
+        }
+    }
 
 }

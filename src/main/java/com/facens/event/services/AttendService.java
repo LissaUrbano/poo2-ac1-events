@@ -30,6 +30,7 @@ public class AttendService {
     }
 
     public AttendDTO insert(AttendDTO attendDTO) {
+        validateEmailAttend(attendDTO);
         Attend attend = new Attend(attendDTO);
         return new AttendDTO(attendRepository.save(attend));
     }
@@ -48,22 +49,30 @@ public class AttendService {
         return new AttendDTO(attend);
     }
 
-    public AttendDTO update(Long id, AttendDTO attendDTO) { 
+    public AttendDTO update(Long id, AttendDTO attendDTO) {
         try {
             Attend attend = attendRepository.getOne(id);
             //não seta valores Null que vieram do DTO
-            if(attendDTO.getName() != null) {
+            if (attendDTO.getName() != null) {
                 attend.setName(attendDTO.getName());
             }
-            if(attendDTO.getEmail() != null) {
+            if (attendDTO.getEmail() != null) {
                 attend.setEmail(attendDTO.getEmail());
             }
-            
+
             attend = attendRepository.save(attend);
             return new AttendDTO(attend);
 
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, msgNotFound);
+        }
+    }
+    
+    // Validação do Email - Attend
+    public void validateEmailAttend(AttendDTO attendDTO){
+        Optional<Attend> admin = attendRepository.findAdminByEmail(attendDTO.getEmail());
+        if(admin.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Já possui attend com esse email");
         }
     }
 }

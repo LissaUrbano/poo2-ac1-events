@@ -1,5 +1,7 @@
 package com.facens.event.repositories;
 
+import java.util.Optional;
+
 import com.facens.event.entities.Admin;
 
 import org.springframework.data.domain.Page;
@@ -13,5 +15,9 @@ public interface AdminRepository extends JpaRepository<Admin, Long> {
     
     @Query("SELECT e FROM Admin e")
     public Page<Admin> findAdminsPageble(Pageable pageRequest);
+
+    
+    Optional<Admin> findAdminByEmail(String email);
+
 
 }
