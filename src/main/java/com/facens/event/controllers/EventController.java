@@ -6,6 +6,7 @@ import javax.validation.Valid;
 
 import com.facens.event.dto.EventDTO;
 import com.facens.event.dto.TicketPostDTO;
+import com.facens.event.dto.TicketsEventDTO;
 import com.facens.event.entities.Place;
 import com.facens.event.services.EventService;
 
@@ -74,11 +75,6 @@ public class EventController {
 		return ResponseEntity.ok().body(dto);
 	}
 
-
-
-
-
-
 	//****************** ITEM 01 - AF **********************
 	//Associar ou remover um local a um evento.
 	//Validar evento e local.
@@ -100,8 +96,9 @@ public class EventController {
 	//Devolve o total de ingressos pagos, total de ingressos gratuitos, total de ingressos pagos já vendidos, total de ingressos gratuitos já vendidos.
 
 	@GetMapping("{id}/tickets")
-    public ResponseEntity<Void> getTickets(@PathVariable Long id){ //TODO
-        return null; 
+    public ResponseEntity<TicketsEventDTO> getTickets(@PathVariable Long id){
+        TicketsEventDTO dto = eventService.getTickets(id);
+        return ResponseEntity.ok().body(dto);
     }
 
 	//****************** ITEM 03 - AF **********************

@@ -9,7 +9,9 @@ import java.util.Optional;
 import javax.persistence.EntityNotFoundException;
 
 import com.facens.event.dto.EventDTO;
+import com.facens.event.dto.TicketAttendDTO;
 import com.facens.event.dto.TicketPostDTO;
+import com.facens.event.dto.TicketsEventDTO;
 import com.facens.event.entities.Admin;
 import com.facens.event.entities.Attend;
 import com.facens.event.entities.Event;
@@ -226,6 +228,31 @@ public class EventService {
             }
         }
     }
+
+    //****************** ITEM 02 - AF **********************
+	//Devolve a lista de ingressos de um evento, tendo o tipo do ingresso e nome dos participantes.
+	//Devolve o total de ingressos pagos, total de ingressos gratuitos, total de ingressos pagos já vendidos, total de ingressos gratuitos já vendidos.
+    public TicketsEventDTO getTickets(Long id){
+        Optional<Event> opEvent = eventRepository.findById(id);
+        Event event = opEvent.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, msgNotFound));
+
+        TicketsEventDTO ticketsEventDTO = new TicketsEventDTO(event);
+
+        List<Ticket> ticketsEvent = event.getTickets(); 
+        List<Attend> attenddes = attendRepository.findAll();
+        
+        for (Ticket ticket : ticketsEvent) {
+            for (Attend attend : attenddes) {
+                for (Ticket ticketAttend : attend.getTickets()) {
+                    if (ticketAttend.equals(ticket)) {
+                        ticketsEventDTO.addTicketsAttend(new TicketAttendDTO(ticket.getId(), ticket.getType(), attend.getName()));
+                    }
+                }
+            }
+        }
+        return ticketsEventDTO;
+    }
+
 
     //****************** ITEM 03 - AF **********************
 	//Vende um ingresso para um evento.
