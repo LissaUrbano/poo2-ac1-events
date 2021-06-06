@@ -51,7 +51,7 @@ public class Event implements Serializable{
     private Double priceTicket;
 
     @JsonIgnore
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.PERSIST)
     private List<Place> places = new ArrayList<>(); 
 
     @OneToMany(cascade = CascadeType.PERSIST)

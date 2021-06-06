@@ -169,6 +169,7 @@ public class EventService {
         if (!existPlaceInEvent(event, place)) {
             placeAvailable(event, place);
             event.addPlaces(place);
+            place.addEvents(event);
             eventRepository.save(event);
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Local já cadastrado no evento");
@@ -186,6 +187,7 @@ public class EventService {
 
         if (existPlaceInEvent(event, place)) {
             event.removePlaces(place);
+            place.removeEvent(event);
             eventRepository.save(event);
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Local não cadastrado no evento");
@@ -201,8 +203,8 @@ public class EventService {
     private boolean existPlaceInEvent(Event event, Place place){
         List<Place> placesEvent = event.getPlaces();
         
-        for (Place place2 : placesEvent) {
-            if (place2.equals(place)) {
+        for (Place placeCurrent : placesEvent) {
+            if (placeCurrent.equals(place)) {
                 return true;
             } 
         }
@@ -210,14 +212,15 @@ public class EventService {
     }
 
     private void placeAvailable(Event event, Place place) {
-        LocalDate startDate = event.getStartDate();
-        LocalDate endDate = event.getEndDate();
+        LocalDate startDateEvent = event.getStartDate();
+        LocalDate endDateEvent = event.getEndDate();
 
         List<Event> eventsPlace = place.getEvents();
 
+        //permite um evento por dia
         for (Event eventplace : eventsPlace) {
-            if (startDate.isBefore(eventplace.getStartDate()) && endDate.isBefore(eventplace.getStartDate()) ||
-                startDate.isAfter(eventplace.getEndDate()) && endDate.isAfter(eventplace.getEndDate()) ) {
+            if (startDateEvent.isBefore(eventplace.getStartDate()) && endDateEvent.isBefore(eventplace.getStartDate()) ||
+            startDateEvent.isAfter(eventplace.getEndDate()) && endDateEvent.isAfter(eventplace.getEndDate()) ) {
             } else {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Local não disponivel para a data do evento");
             }
