@@ -11,6 +11,7 @@ import javax.validation.constraints.NotNull;
 
 import com.facens.event.entities.Event;
 import com.facens.event.entities.Place;
+import com.facens.event.entities.Ticket;
 
 public class EventDTO {
     
@@ -52,15 +53,18 @@ public class EventDTO {
 
     private List<Place> places = new ArrayList<>(); 
 
+    private List<Ticket> tickets = new ArrayList<>(); 
+
     @NotNull(message = "Admin Id is mandatory")
     private Long admin;
     
     public EventDTO() {
     }
 
+    /*
     public EventDTO(Long id, String name, String description, List<Place> places, LocalDate startDate, LocalDate endDate,
             LocalTime startTime, LocalTime endTime, String emailContact, Long amountFreeTickets, Long amountPayedTickets,
-            Integer freeTickectsSelled, Integer payedTickectsSelled, Double priceTicket, Long admin) {
+            Integer freeTickectsSelled, Integer payedTickectsSelled, Double priceTicket, Long admin, List<Ticket> tickets) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -76,7 +80,8 @@ public class EventDTO {
         this.payedTickectsSelled = payedTickectsSelled;
         this.priceTicket = priceTicket;
         this.admin= admin;
-    }
+        this.tickets = tickets;
+    }*/
 
     public EventDTO(Event event) {
         setId(event.getId());
@@ -94,6 +99,7 @@ public class EventDTO {
         setPayedTickectsSelled(event.getPayedTickectsSelled());
         setPriceTicket(event.getPriceTicket());
         setAdmin(event.getAdmin().getId());
+        setTickets(event.getTickets());
 	}
 
     public Long getId() {
@@ -214,6 +220,14 @@ public class EventDTO {
 
     public void setAdmin(Long admin) {
         this.admin = admin;
+    }
+
+    public List<Ticket> getTickets() {
+        return tickets;
+    }
+
+    public void setTickets(List<Ticket> tickets) {
+        this.tickets = tickets;
     }
 }
 

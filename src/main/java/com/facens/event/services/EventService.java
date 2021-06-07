@@ -276,21 +276,24 @@ public class EventService {
                 event.addTickets(ticket);
                 event.setFreeTickectsSelled(event.getFreeTickectsSelled()+1);
                 ticket.setPrice(0.00);
+            } else {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Os ingressos gratuitos esgotaram para este evento");
             }
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Os ingressos gratuitos esgotaram para este evento");
         } else if (ticket.getType().equals(TypeTicket.PAYED)){
             if (event.getPayedTickectsSelled() < event.getAmountPayedTickets()) {
                 event.addTickets(ticket);
                 event.setPayedTickectsSelled(event.getPayedTickectsSelled()+1);
                 ticket.setPrice(event.getPriceTicket());
+            } else {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Os ingressos pagos esgotaram para este evento");
             }
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Os ingressos pagos esgotaram para este evento");
         }
         
         Optional<Attend> opAttend = attendRepository.findById(ticketDto.getAttend());
         Attend attend = opAttend.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Attend not found"));
         attend.addTickets(ticket);
       
+        ticketRepository.save(ticket);
         eventRepository.save(event);
         attendRepository.save(attend);
     }

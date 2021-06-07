@@ -1,8 +1,12 @@
 package com.facens.event.dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.validation.constraints.NotBlank;
 
 import com.facens.event.entities.Attend;
+import com.facens.event.entities.Ticket;
 
 public class AttendDTO {
 
@@ -16,14 +20,17 @@ public class AttendDTO {
     
     private Double balance;
 
+    private List<Ticket> tickets = new ArrayList<>(); 
+
     public AttendDTO() {
     }
 
-    public AttendDTO(Long id, String name, String email, Double balance) {
+    public AttendDTO(Long id, String name, String email, Double balance, List<Ticket> tickets) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.balance = balance;
+        this.tickets = tickets;
     }
 
     public AttendDTO(Attend attend) {
@@ -31,6 +38,7 @@ public class AttendDTO {
         setName(attend.getName());
         setEmail(attend.getEmail());
         setBalance(attend.getBalance());
+        setTickets(attend.getTickets());
 	}
 
     public Long getId() {
@@ -57,5 +65,10 @@ public class AttendDTO {
     public void setBalance(Double balance) {
         this.balance = balance;
     }
-
+    public List<Ticket> getTickets() {
+        return tickets;
+    }
+    public void setTickets(List<Ticket> tickets) {
+        this.tickets = tickets;
+    }
 }

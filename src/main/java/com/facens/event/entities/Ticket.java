@@ -10,7 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.facens.event.dto.TicketPostDTO;
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 @Table(name="TB_TICKET")
@@ -22,7 +21,6 @@ public class Ticket implements Serializable{
 
     private TypeTicket type;
 
-    @JsonFormat(pattern = "dd/MM/yyyy")
     private Instant date;
 
     private Double price;
