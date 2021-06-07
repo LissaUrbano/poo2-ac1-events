@@ -186,6 +186,10 @@ public class Event implements Serializable{
         this.tickets.add(ticket);
     }
 
+    public void removeTickets(Ticket ticket) {
+        this.tickets.remove(ticket);
+    }
+
     public Admin getAdmin() {
         return admin;
     }

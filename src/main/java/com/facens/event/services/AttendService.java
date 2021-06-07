@@ -2,8 +2,6 @@ package com.facens.event.services;
 
 import java.util.Optional;
 
-import javax.persistence.EntityNotFoundException;
-
 import com.facens.event.dto.AttendDTO;
 import com.facens.event.entities.Attend;
 import com.facens.event.repositories.AttendRepository;
@@ -31,8 +29,7 @@ public class AttendService {
 
     public AttendDTO insert(AttendDTO attendDTO) {
         validateEmailAttend(attendDTO);
-        Attend attend = new Attend(attendDTO);
-        return new AttendDTO(attendRepository.save(attend));
+        return new AttendDTO(attendRepository.save(new Attend(attendDTO)));
     }
 
     public void delete(Long id) {
@@ -43,29 +40,23 @@ public class AttendService {
         }
     }
 
-    public AttendDTO getAttendById(Long id) {
-        Optional<Attend> op = attendRepository.findById(id);
-        Attend attend = op.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, msgNotFound));
-        return new AttendDTO(attend);
+    public AttendDTO getAttendDtoById(Long id) {
+        return new AttendDTO(getAttendById(id));
     }
 
     public AttendDTO update(Long id, AttendDTO attendDTO) {
-        try {
-            Attend attend = attendRepository.getOne(id);
-            //não seta valores Null que vieram do DTO
-            if (attendDTO.getName() != null) {
-                attend.setName(attendDTO.getName());
-            }
-            if (attendDTO.getEmail() != null) {
-                attend.setEmail(attendDTO.getEmail());
-            }
-
-            attend = attendRepository.save(attend);
-            return new AttendDTO(attend);
-
-        } catch (EntityNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, msgNotFound);
+        Attend attend = getAttendById(id);
+            
+        //não seta valores Null que vieram do DTO
+        if (attendDTO.getName() != null) {
+            attend.setName(attendDTO.getName());
         }
+        if (attendDTO.getEmail() != null) {
+            validateEmailAttend(attendDTO);
+            attend.setEmail(attendDTO.getEmail());
+        }
+
+        return new AttendDTO(attendRepository.save(attend));
     }
     
     // Validação do Email - Attend
@@ -74,5 +65,10 @@ public class AttendService {
         if(admin.isPresent()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Já possui attend com esse email");
         }
+    }
+
+    public Attend getAttendById(Long id) {
+        Optional<Attend> op = attendRepository.findById(id);
+        return op.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, msgNotFound));
     }
 }

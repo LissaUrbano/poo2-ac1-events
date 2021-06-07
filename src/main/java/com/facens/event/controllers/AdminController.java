@@ -57,7 +57,7 @@ public class AdminController {
 
     @GetMapping("{id}")
     public ResponseEntity<AdminDTO> getAdminById(@PathVariable Long id){
-        AdminDTO dto = adminService.getAdminById(id);
+        AdminDTO dto = adminService.getAdminDtoById(id);
         return ResponseEntity.ok().body(dto);
     }
 

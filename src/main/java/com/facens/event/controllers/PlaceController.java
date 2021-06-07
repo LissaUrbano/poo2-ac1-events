@@ -59,7 +59,7 @@ public class PlaceController {
 
     @GetMapping("{id}")
     public ResponseEntity<PlaceDTO> getPlaceById(@PathVariable Long id){
-        PlaceDTO dto = placeService.getPlaceById(id);
+        PlaceDTO dto = placeService.getPlaceDtoById(id);
         return ResponseEntity.ok().body(dto);
     }
 

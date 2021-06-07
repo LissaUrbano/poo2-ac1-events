@@ -65,7 +65,7 @@ public class EventController {
 
     @GetMapping("{id}")
     public ResponseEntity<EventDTO> getEventById(@PathVariable Long id){
-        EventDTO dto = eventService.getEventById(id);
+        EventDTO dto = eventService.getEventDtoById(id);
         return ResponseEntity.ok().body(dto);
     }
 
@@ -95,9 +95,9 @@ public class EventController {
 	//Devolve a lista de ingressos de um evento, tendo o tipo do ingresso e nome dos participantes.
 	//Devolve o total de ingressos pagos, total de ingressos gratuitos, total de ingressos pagos já vendidos, total de ingressos gratuitos já vendidos.
 
-	@GetMapping("{id}/tickets")
-    public ResponseEntity<TicketsEventDTO> getTickets(@PathVariable Long id){
-        TicketsEventDTO dto = eventService.getTickets(id);
+	@GetMapping("{eventId}/tickets")
+    public ResponseEntity<TicketsEventDTO> getTickets(@PathVariable Long eventId){
+        TicketsEventDTO dto = eventService.getTickets(eventId);
         return ResponseEntity.ok().body(dto);
     }
 
@@ -118,5 +118,4 @@ public class EventController {
 		eventService.returnTicket(eventId, ticketId); 
 		return ResponseEntity.ok().build();
 	}
-    
 }

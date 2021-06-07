@@ -6,8 +6,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
-import javax.persistence.EntityNotFoundException;
-
 import com.facens.event.dto.EventDTO;
 import com.facens.event.dto.TicketAttendDTO;
 import com.facens.event.dto.TicketPostDTO;
@@ -18,11 +16,8 @@ import com.facens.event.entities.Event;
 import com.facens.event.entities.Place;
 import com.facens.event.entities.Ticket;
 import com.facens.event.entities.TypeTicket;
-import com.facens.event.repositories.AdminRepository;
 import com.facens.event.repositories.AttendRepository;
 import com.facens.event.repositories.EventRepository;
-import com.facens.event.repositories.PlaceRepository;
-import com.facens.event.repositories.TicketRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -39,16 +34,19 @@ public class EventService {
     private EventRepository eventRepository;
 
     @Autowired
-    private AdminRepository adminRepository;
+    private AdminService adminService;
 
     @Autowired
-    private PlaceRepository placeRepository;
+    private PlaceService placeService;
 
     @Autowired
-    private TicketRepository ticketRepository;
+    private TicketService ticketService;
 
     @Autowired
     private AttendRepository attendRepository;
+
+    @Autowired
+    private AttendService attendService;
 
     private String msgNotFound = "Event not found";
 
@@ -60,12 +58,8 @@ public class EventService {
 
     public EventDTO insert(EventDTO eventDTO) {
         validarDataHora(eventDTO);
-        Admin admin;
-        try {
-            admin = adminRepository.findById(eventDTO.getAdmin()).get();
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O admin informado inválido");
-        }
+        Admin admin = adminService.getAdminById(eventDTO.getAdmin());
+
         Event event = new Event(eventDTO);
         event.setAdmin(admin);
         return new EventDTO(eventRepository.save(event));
@@ -79,56 +73,45 @@ public class EventService {
         }
     }
 
-    public EventDTO getEventById(Long id) {
+    public EventDTO getEventDtoById(Long id) {
+        return new EventDTO(getEventById(id));
+    }
+
+    private Event getEventById(Long id) {
         Optional<Event> op = eventRepository.findById(id);
-        Event event = op.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, msgNotFound));
-        return new EventDTO(event);
+        return op.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, msgNotFound));
     }
 
     public EventDTO update(Long id, EventDTO eventDTO) { 
-        try {
-            Event event = eventRepository.getOne(id);
-            //não seta valores Null que vieram do DTO
-            if(eventDTO.getName() != null) {
-                event.setName(eventDTO.getName());
-            }
-            if(eventDTO.getDescription() != null) {
-                event.setDescription(eventDTO.getDescription());
-            }
-            if(eventDTO.getStartDate() != null) {
-                eventAvailable(event);
-                event.setStartDate(eventDTO.getStartDate()); 
-            }
-            if(eventDTO.getEndDate() != null) {
-                eventAvailable(event);
-                event.setEndDate(eventDTO.getEndDate());
-            }
-            if(eventDTO.getStartTime() != null) {
-                eventAvailable(event);
-                event.setStartTime(eventDTO.getStartTime());
-            }
-            if(eventDTO.getEndTime() != null) {
-                eventAvailable(event);
-                event.setEndTime(eventDTO.getEndTime()); 
-            }
-            if(eventDTO.getEmailContact() != null) {
-                event.setEmailContact(eventDTO.getEmailContact());
-            }
+        Event event = getEventById(id);
 
-            //valida os novos dados inseridos para Data e Hora
-            EventDTO eventValidacao = new EventDTO(event);
-            validarDataHora(eventValidacao);
-            
-            event = eventRepository.save(event);
-            return new EventDTO(event);
-
-        } catch (EntityNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, msgNotFound);
+        //não seta valores Null que vieram do DTO
+        if(eventDTO.getName() != null) event.setName(eventDTO.getName());
+        if(eventDTO.getDescription() != null) event.setDescription(eventDTO.getDescription());
+        if(eventDTO.getStartDate() != null) {
+            eventAvailable(event);
+            event.setStartDate(eventDTO.getStartDate()); 
         }
+        if(eventDTO.getEndDate() != null) {
+            eventAvailable(event);
+            event.setEndDate(eventDTO.getEndDate());
+        }
+        if(eventDTO.getStartTime() != null) {
+            eventAvailable(event);
+            event.setStartTime(eventDTO.getStartTime());
+        }
+        if(eventDTO.getEndTime() != null) {
+            eventAvailable(event);
+            event.setEndTime(eventDTO.getEndTime()); 
+        }
+        if(eventDTO.getEmailContact() != null) event.setEmailContact(eventDTO.getEmailContact());
+
+        //valida os novos dados inseridos para Data e Hora
+        validarDataHora(new EventDTO(event));
+        return new EventDTO(eventRepository.save(event));
     }
     
     private void validarDataHora(EventDTO eventDTO) {
-
         if (eventDTO.getStartDate().isBefore(LocalDate.now())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A data inicial informada deve ser igual ou maior que a data de hoje");
         }
@@ -147,8 +130,7 @@ public class EventService {
         if (!startDate.isEmpty()) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");    
             try {
-                LocalDate date = LocalDate.parse(startDate, formatter);
-                return date;
+                return LocalDate.parse(startDate, formatter);
             } catch (Exception e) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Data de filtro inválida, inserir no formato dia/mês/ano. exemplo: 03/04/2021");
             }  
@@ -160,13 +142,9 @@ public class EventService {
     
 	//****************** ITEM 01 - AF **********************
 	public void associatePlaceEvent(Long eventId, Long placeId) {
-        Optional<Event> opEvent = eventRepository.findById(eventId);
-        Event event = opEvent.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, msgNotFound));
-
+        Event event = getEventById(eventId);
         eventAvailable(event);
-
-        Optional<Place> opPlace = placeRepository.findById(placeId);
-        Place place = opPlace.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Place not found"));
+        Place place = placeService.getPlaceById(placeId);
 
         if (!existPlaceInEvent(event, place)) {
             placeAvailable(event, place);
@@ -179,13 +157,9 @@ public class EventService {
 	}
 
     public void removePlaceEvent(Long eventId, Long placeId) {
-        Optional<Event> opEvent = eventRepository.findById(eventId);
-        Event event = opEvent.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, msgNotFound));
-
+        Event event = getEventById(eventId);
         eventAvailable(event);
-
-        Optional<Place> opPlace = placeRepository.findById(placeId);
-        Place place = opPlace.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Place not found"));
+        Place place = placeService.getPlaceById(placeId);
 
         if (existPlaceInEvent(event, place)) {
             event.removePlaces(place);
@@ -203,9 +177,7 @@ public class EventService {
     }
 
     private boolean existPlaceInEvent(Event event, Place place){
-        List<Place> placesEvent = event.getPlaces();
-        
-        for (Place placeCurrent : placesEvent) {
+        for (Place placeCurrent : event.getPlaces()) {
             if (placeCurrent.equals(place)) {
                 return true;
             } 
@@ -217,10 +189,8 @@ public class EventService {
         LocalDate startDateEvent = event.getStartDate();
         LocalDate endDateEvent = event.getEndDate();
 
-        List<Event> eventsPlace = place.getEvents();
-
         //permite um evento por dia
-        for (Event eventplace : eventsPlace) {
+        for (Event eventplace : place.getEvents()) {
             if (startDateEvent.isBefore(eventplace.getStartDate()) && endDateEvent.isBefore(eventplace.getStartDate()) ||
             startDateEvent.isAfter(eventplace.getEndDate()) && endDateEvent.isAfter(eventplace.getEndDate()) ) {
             } else {
@@ -230,18 +200,12 @@ public class EventService {
     }
 
     //****************** ITEM 02 - AF **********************
-	//Devolve a lista de ingressos de um evento, tendo o tipo do ingresso e nome dos participantes.
-	//Devolve o total de ingressos pagos, total de ingressos gratuitos, total de ingressos pagos já vendidos, total de ingressos gratuitos já vendidos.
     public TicketsEventDTO getTickets(Long id){
-        Optional<Event> opEvent = eventRepository.findById(id);
-        Event event = opEvent.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, msgNotFound));
-
+        Event event = getEventById(id);
         TicketsEventDTO ticketsEventDTO = new TicketsEventDTO(event);
-
-        List<Ticket> ticketsEvent = event.getTickets(); 
         List<Attend> attenddes = attendRepository.findAll();
         
-        for (Ticket ticket : ticketsEvent) {
+        for (Ticket ticket : event.getTickets()) {
             for (Attend attend : attenddes) {
                 for (Ticket ticketAttend : attend.getTickets()) {
                     if (ticketAttend.equals(ticket)) {
@@ -255,18 +219,8 @@ public class EventService {
 
 
     //****************** ITEM 03 - AF **********************
-	//Vende um ingresso para um evento.
-	//Passar o id do participante no corpo da requisição.
-	//Passar se o ingresso é pago ou gratuito no corpo da requisição.
-	//Validar se é possível fazer a venda.
     public void sellTicket(TicketPostDTO ticketDto, Long eventId) {
-        Event event;
-        try {
-            event = eventRepository.findById(eventId).get();
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O evento informado não existe");
-        }
-
+        Event event = getEventById(eventId);
         eventAvailable(event);
         validateTicket(ticketDto.getType());
         Ticket ticket = new Ticket(ticketDto);
@@ -289,11 +243,8 @@ public class EventService {
             }
         }
         
-        Optional<Attend> opAttend = attendRepository.findById(ticketDto.getAttend());
-        Attend attend = opAttend.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Attend not found"));
+        Attend attend = attendService.getAttendById(ticketDto.getAttend());
         attend.addTickets(ticket);
-      
-        ticketRepository.save(ticket);
         eventRepository.save(event);
         attendRepository.save(attend);
     }
@@ -306,27 +257,18 @@ public class EventService {
 
     //Na devolução de um ingresso pago, criar saldo para o participante.
     public void returnTicket(Long eventId, Long ticketId) { 
-        Event event;
-        try {
-            event = eventRepository.findById(eventId).get();
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O evento informado não existe");
-        }
-
+        Event event = getEventById(eventId);
         eventAvailable(event);
-
-        Optional<Ticket> opTicket = ticketRepository.findById(ticketId);
-        Ticket ticketSelled = opTicket.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Ticket not found"));
-
-        List<Attend> attendList = attendRepository.findAll();
+        Ticket ticketSelled = ticketService.getTicketById(ticketId);
         Attend attend = null;
 
-        for (Attend attendCurrent : attendList) {
+        for (Attend attendCurrent : attendRepository.findAll()) {
             for (Ticket ticket : attendCurrent.getTickets()) {
                 if (ticket.equals(ticketSelled)) {
                     attend = attendCurrent;
                     attend.setBalance(attend.getBalance() + ticket.getPrice());
                     attend.removeTicket(ticket);
+                    event.removeTickets(ticket);
                 }
             }
         }
@@ -334,12 +276,11 @@ public class EventService {
         attendRepository.save(attend);
 
         if (ticketSelled.getType() == TypeTicket.FREE) {
-            event.setAmountFreeTickets(event.getAmountFreeTickets() + 1);
+            event.setFreeTickectsSelled(event.getFreeTickectsSelled() - 1);
         } else {
-            event.setAmountPayedTickets(event.getAmountPayedTickets() + 1);
+            event.setPayedTickectsSelled(event.getPayedTickectsSelled() - 1);
         }
 
         eventRepository.save(event);
     }
-
 }

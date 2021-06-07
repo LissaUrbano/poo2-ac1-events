@@ -12,7 +12,7 @@ public class TicketPostDTO implements Serializable{
 
     private Long id;
 
-    //@NotNull(message = "Type is mandatory")
+    @NotNull(message = "Type is mandatory")
     private TypeTicket type;
 
     private Instant date;

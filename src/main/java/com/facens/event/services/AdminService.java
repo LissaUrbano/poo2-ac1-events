@@ -3,8 +3,6 @@ package com.facens.event.services;
 import java.util.List;
 import java.util.Optional;
 
-import javax.persistence.EntityNotFoundException;
-
 import com.facens.event.dto.AdminDTO;
 import com.facens.event.entities.Admin;
 import com.facens.event.entities.Event;
@@ -37,8 +35,7 @@ public class AdminService {
 
     public AdminDTO insert(AdminDTO adminDTO) {
         validateEmailAdmin(adminDTO);
-        Admin admin = new Admin(adminDTO);
-        return new AdminDTO(adminRepository.save(admin));
+        return new AdminDTO(adminRepository.save(new Admin(adminDTO)));
     }
 
     public void delete(Long id) {
@@ -46,7 +43,7 @@ public class AdminService {
             List<Event> events = eventRepository.findAll();
             for (Event event : events) {
                 if (event.getAdmin().getId().equals(id)) {
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Admin possui eventos cadastrados");
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Não é possivel excluir, Admin possui eventos cadastrados");
                 }
             }
             adminRepository.deleteById(id);
@@ -55,32 +52,26 @@ public class AdminService {
         }
     }
 
-    public AdminDTO getAdminById(Long id) {
-        Optional<Admin> op = adminRepository.findById(id);
-        Admin admin = op.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, msgNotFound));
-        return new AdminDTO(admin);
+    public AdminDTO getAdminDtoById(Long id) {
+        return new AdminDTO(getAdminById(id));
     }
 
     public AdminDTO update(Long id, AdminDTO adminDTO) {
-        try {
-            Admin admin = adminRepository.getOne(id);
-            //não seta valores Null que vieram do DTO
-            if (adminDTO.getName() != null) {
-                admin.setName(adminDTO.getName());
-            }
-            if (adminDTO.getPhoneNumber() != null) {
-                admin.setPhoneNumber(adminDTO.getPhoneNumber());
-            }
-            if (adminDTO.getEmail() != null) {
-                admin.setEmail(adminDTO.getEmail());
-            }
+        Admin admin = getAdminById(id);
 
-            admin = adminRepository.save(admin);
-            return new AdminDTO(admin);
-
-        } catch (EntityNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, msgNotFound);
+        //não seta valores Null que vieram do DTO
+        if (adminDTO.getName() != null) {
+            admin.setName(adminDTO.getName());
         }
+        if (adminDTO.getPhoneNumber() != null) {
+            admin.setPhoneNumber(adminDTO.getPhoneNumber());
+        }
+        if (adminDTO.getEmail() != null) {
+            validateEmailAdmin(adminDTO);
+            admin.setEmail(adminDTO.getEmail());
+        }
+
+        return new AdminDTO(adminRepository.save(admin));
     }
 
     // Validação do Email - Admin
@@ -91,4 +82,8 @@ public class AdminService {
         }
     }
 
+    public Admin getAdminById(Long id) {
+        Optional<Admin> op = adminRepository.findById(id);
+        return op.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, msgNotFound));
+    }
 }

@@ -2,8 +2,6 @@ package com.facens.event.services;
 
 import java.util.Optional;
 
-import javax.persistence.EntityNotFoundException;
-
 import com.facens.event.dto.PlaceDTO;
 import com.facens.event.entities.Place;
 import com.facens.event.repositories.PlaceRepository;
@@ -30,8 +28,7 @@ public class PlaceService {
     }
 
     public PlaceDTO insert(PlaceDTO placeDTO) {
-        Place place = new Place(placeDTO);
-        return new PlaceDTO(placeRepository.save(place));
+        return new PlaceDTO(placeRepository.save(new Place(placeDTO)));
     }
 
     public void delete(Long id) {
@@ -42,28 +39,26 @@ public class PlaceService {
         }
     }
 
-    public PlaceDTO getPlaceById(Long id) {
-        Optional<Place> op = placeRepository.findById(id);
-        Place place = op.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, msgNotFound));
-        return new PlaceDTO(place);
+    public PlaceDTO getPlaceDtoById(Long id) {
+        return new PlaceDTO(getPlaceById(id));
     }
 
-    public PlaceDTO update(Long id, PlaceDTO placeDTO) { 
-        try {
-            Place place = placeRepository.getOne(id);
-            //não seta valores Null que vieram do DTO
-            if(placeDTO.getName() != null) {
-                place.setName(placeDTO.getName());
-            }
-            if(placeDTO.getAddress() != null) {
-                place.setAddress(placeDTO.getAddress()); 
-            }
-            
-            place = placeRepository.save(place);
-            return new PlaceDTO(place);
+    public PlaceDTO update(Long id, PlaceDTO placeDTO) {
+        Place place = getPlaceById(id);
 
-        } catch (EntityNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, msgNotFound);
+        //não seta valores Null que vieram do DTO
+        if(placeDTO.getName() != null) {
+            place.setName(placeDTO.getName());
         }
+        if(placeDTO.getAddress() != null) {
+            place.setAddress(placeDTO.getAddress()); 
+        }
+
+        return new PlaceDTO(placeRepository.save(place));
+    }
+
+    public Place getPlaceById(Long id) {
+        Optional<Place> op = placeRepository.findById(id);
+        return op.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, msgNotFound));
     }
 }
