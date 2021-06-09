@@ -70,7 +70,7 @@ public class EventController {
     }
 
     @PutMapping("{id}")
-	public ResponseEntity<EventDTO> update(@Valid @RequestBody EventDTO updateDto, @PathVariable Long id){
+	public ResponseEntity<EventDTO> update(@RequestBody EventDTO updateDto, @PathVariable Long id){
 		EventDTO dto = eventService.update(id, updateDto); 
 		return ResponseEntity.ok().body(dto);
 	}
@@ -107,9 +107,9 @@ public class EventController {
 	//Passar se o ingresso é pago ou gratuito no corpo da requisição.
 	//Validar se é possível fazer a venda.
 	@PostMapping("{eventId}/tickets")
-	public ResponseEntity<Void> sellTicket(@RequestBody TicketPostDTO ticketDto, @PathVariable Long eventId){
-		eventService.sellTicket(ticketDto, eventId); 
-		return ResponseEntity.ok().build();
+	public ResponseEntity<TicketPostDTO> sellTicket(@RequestBody TicketPostDTO ticketDto, @PathVariable Long eventId){
+		TicketPostDTO ticket = eventService.sellTicket(ticketDto, eventId); 
+		return ResponseEntity.ok().body(ticket);
 	}
 
 	//Na devolução de um ingresso pago, criar saldo para o participante.

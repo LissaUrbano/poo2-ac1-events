@@ -18,6 +18,7 @@ import com.facens.event.entities.Ticket;
 import com.facens.event.entities.TypeTicket;
 import com.facens.event.repositories.AttendRepository;
 import com.facens.event.repositories.EventRepository;
+import com.facens.event.repositories.TicketRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -38,6 +39,9 @@ public class EventService {
 
     @Autowired
     private PlaceService placeService;
+
+    @Autowired
+    private TicketRepository ticketRepository;
 
     @Autowired
     private TicketService ticketService;
@@ -84,24 +88,20 @@ public class EventService {
 
     public EventDTO update(Long id, EventDTO eventDTO) { 
         Event event = getEventById(id);
-
+        eventAvailable(event);
         //não seta valores Null que vieram do DTO
         if(eventDTO.getName() != null) event.setName(eventDTO.getName());
         if(eventDTO.getDescription() != null) event.setDescription(eventDTO.getDescription());
         if(eventDTO.getStartDate() != null) {
-            eventAvailable(event);
             event.setStartDate(eventDTO.getStartDate()); 
         }
         if(eventDTO.getEndDate() != null) {
-            eventAvailable(event);
             event.setEndDate(eventDTO.getEndDate());
         }
         if(eventDTO.getStartTime() != null) {
-            eventAvailable(event);
             event.setStartTime(eventDTO.getStartTime());
         }
         if(eventDTO.getEndTime() != null) {
-            eventAvailable(event);
             event.setEndTime(eventDTO.getEndTime()); 
         }
         if(eventDTO.getEmailContact() != null) event.setEmailContact(eventDTO.getEmailContact());
@@ -171,7 +171,7 @@ public class EventService {
     }
 
     private void eventAvailable(Event event){
-        if (event.getStartDate().isBefore(LocalDate.now()) || event.getStartDate().isEqual(LocalDate.now()) && event.getStartTime().isAfter(LocalTime.now())) {
+        if (event.getStartDate().isBefore(LocalDate.now()) || event.getStartDate().isEqual(LocalDate.now()) && event.getStartTime().isBefore(LocalTime.now())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O evento já foi iniciado e não pode ser modificado");
         }
     }
@@ -219,7 +219,7 @@ public class EventService {
 
 
     //****************** ITEM 03 - AF **********************
-    public void sellTicket(TicketPostDTO ticketDto, Long eventId) {
+    public TicketPostDTO sellTicket(TicketPostDTO ticketDto, Long eventId) {
         Event event = getEventById(eventId);
         eventAvailable(event);
         validateTicket(ticketDto.getType());
@@ -243,10 +243,12 @@ public class EventService {
             }
         }
         
+        ticketRepository.save(ticket);
         Attend attend = attendService.getAttendById(ticketDto.getAttend());
         attend.addTickets(ticket);
         eventRepository.save(event);
         attendRepository.save(attend);
+        return new TicketPostDTO(ticket);
     }
 
     private void validateTicket(TypeTicket type) {
@@ -262,25 +264,35 @@ public class EventService {
         Ticket ticketSelled = ticketService.getTicketById(ticketId);
         Attend attend = null;
 
+        attend = findAttendByTicket(ticketSelled);
+
+        if (attend != null) {
+            attend.setBalance(attend.getBalance() + ticketSelled.getPrice());
+            attend.removeTicket(ticketSelled);
+            event.removeTickets(ticketSelled);
+
+            attendRepository.save(attend);
+
+            if (ticketSelled.getType() == TypeTicket.FREE) {
+                event.setFreeTickectsSelled(event.getFreeTickectsSelled() - 1);
+            } else {
+                event.setPayedTickectsSelled(event.getPayedTickectsSelled() - 1);
+            }
+    
+            eventRepository.save(event);
+            ticketRepository.delete(ticketSelled);
+        }
+    }
+
+    private Attend findAttendByTicket(Ticket ticketSelled) {
         for (Attend attendCurrent : attendRepository.findAll()) {
             for (Ticket ticket : attendCurrent.getTickets()) {
                 if (ticket.equals(ticketSelled)) {
-                    attend = attendCurrent;
-                    attend.setBalance(attend.getBalance() + ticket.getPrice());
-                    attend.removeTicket(ticket);
-                    event.removeTickets(ticket);
+                    return attendCurrent;
                 }
             }
         }
 
-        attendRepository.save(attend);
-
-        if (ticketSelled.getType() == TypeTicket.FREE) {
-            event.setFreeTickectsSelled(event.getFreeTickectsSelled() - 1);
-        } else {
-            event.setPayedTickectsSelled(event.getPayedTickectsSelled() - 1);
-        }
-
-        eventRepository.save(event);
+        return null;
     }
 }
