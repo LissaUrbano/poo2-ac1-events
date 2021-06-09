@@ -11,7 +11,6 @@ import javax.validation.constraints.NotNull;
 
 import com.facens.event.entities.Event;
 import com.facens.event.entities.Place;
-import com.facens.event.entities.Ticket;
 
 public class EventDTO {
     
@@ -50,10 +49,10 @@ public class EventDTO {
 
     @NotNull(message = "Price Ticket is mandatory")
     private Double priceTicket;
+    
+    private List<PlaceDTO> places = new ArrayList<>(); 
 
-    private List<Place> places = new ArrayList<>(); 
-
-    private List<Ticket> tickets = new ArrayList<>(); 
+    //private List<Ticket> tickets = new ArrayList<>(); 
 
     @NotNull(message = "Admin Id is mandatory")
     private Long admin;
@@ -87,7 +86,7 @@ public class EventDTO {
         setId(event.getId());
         setName(event.getName());
         setDescription(event.getDescription());
-        setPlaces(event.getPlaces());
+        setPlaces(convertListPlaceDTO(event.getPlaces()));
         setStartDate(event.getStartDate());
         setEndDate(event.getEndDate());
         setStartTime(event.getStartTime());
@@ -99,7 +98,7 @@ public class EventDTO {
         setPayedTickectsSelled(event.getPayedTickectsSelled());
         setPriceTicket(event.getPriceTicket());
         setAdmin(event.getAdmin().getId());
-        setTickets(event.getTickets());
+        //setTickets(event.getTickets());
 	}
 
     public Long getId() {
@@ -206,11 +205,11 @@ public class EventDTO {
         this.priceTicket = priceTicket;
     }
 
-    public List<Place> getPlaces() {
+    public List<PlaceDTO> getPlaces() {
         return places;
     }
 
-    public void setPlaces(List<Place> places) {
+    public void setPlaces(List<PlaceDTO> places) {
         this.places = places;
     }
 
@@ -222,13 +221,23 @@ public class EventDTO {
         this.admin = admin;
     }
 
+    private List<PlaceDTO> convertListPlaceDTO(List<Place> places2) {
+        List<PlaceDTO> listPlaceDTO = new ArrayList<>();
+        for (Place place: places2) {
+            PlaceDTO placeDTO = new PlaceDTO(place);
+            listPlaceDTO.add(placeDTO);
+        }
+        return listPlaceDTO;
+    }
+
+    /*
     public List<Ticket> getTickets() {
         return tickets;
     }
 
     public void setTickets(List<Ticket> tickets) {
         this.tickets = tickets;
-    }
+    }*/
 }
 
     

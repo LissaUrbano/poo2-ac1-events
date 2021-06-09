@@ -68,7 +68,6 @@ public class Event implements Serializable{
     public Event(EventDTO eventDTO) {
         this.name = eventDTO.getName();
         this.description = eventDTO.getDescription();
-        this.places = eventDTO.getPlaces();
         this.startDate = eventDTO.getStartDate();
         this.endDate = eventDTO.getEndDate();
         this.startTime = eventDTO.getStartTime();

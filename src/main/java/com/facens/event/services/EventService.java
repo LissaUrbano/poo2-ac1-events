@@ -209,7 +209,7 @@ public class EventService {
             for (Attend attend : attenddes) {
                 for (Ticket ticketAttend : attend.getTickets()) {
                     if (ticketAttend.equals(ticket)) {
-                        ticketsEventDTO.addTicketsAttend(new TicketAttendDTO(ticket.getId(), ticket.getType(), attend.getName()));
+                        ticketsEventDTO.addTickets(new TicketAttendDTO(ticket.getId(), ticket.getType(), attend.getName()));
                     }
                 }
             }

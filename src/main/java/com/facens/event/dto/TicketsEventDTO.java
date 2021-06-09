@@ -7,7 +7,7 @@ import com.facens.event.entities.Event;
 
 public class TicketsEventDTO {
 
-    private List<TicketAttendDTO> ticketsAttend = new ArrayList<>();
+    private List<TicketAttendDTO> tickets = new ArrayList<>();
     private Long amountFreeTickets; 
     private Long amountPayedTickets;
     private Integer freeTickectsSelled;
@@ -20,11 +20,11 @@ public class TicketsEventDTO {
         setPayedTickectsSelled(event.getPayedTickectsSelled());
     }
 
-    public List<TicketAttendDTO> getTicketsAttend() {
-        return ticketsAttend;
+    public List<TicketAttendDTO> getTickets() {
+        return tickets;
     }
-    public void addTicketsAttend(TicketAttendDTO ticketsAttend) {
-        this.ticketsAttend.add(ticketsAttend);
+    public void addTickets(TicketAttendDTO tickets) {
+        this.tickets.add(tickets);
     }
     public Long getAmountFreeTickets() {
         return amountFreeTickets;
