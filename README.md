@@ -31,8 +31,6 @@ Lissa Bruna Urbano - 120780
     "emailContact": "festafantasia@gmail.com",
     "amountFreeTickets": 50,
     "amountPayedTickets": 150,
-    "freeTickectsSelled": 0,
-    "payedTickectsSelled": 0,
     "priceTicket": 150.0,
     "admin": 1
 }
