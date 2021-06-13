@@ -24,8 +24,8 @@ Lissa Bruna Urbano - 120780
 {
     "name": "Festa Fantasia",
     "description": "Festa Fantasia",
-    "startDate": "2021-06-10",
-    "endDate": "2021-06-12",
+    "startDate": "2021-08-10",
+    "endDate": "2021-08-12",
     "startTime": "19:00:00",
     "endTime": "23:59:00",
     "emailContact": "festafantasia@gmail.com",
