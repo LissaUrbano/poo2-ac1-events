@@ -25,10 +25,12 @@ public class TicketPostDTO implements Serializable{
     public TicketPostDTO() {
     }
 
-    public TicketPostDTO(TypeTicket type, Instant date, Double price) {
+    public TicketPostDTO(Long id, TypeTicket type, Instant date, Double price, Long attend) {
+        this.id = id;
         this.type = type;
         this.date = date;
         this.price = price;
+        this.attend = attend;
     }
 
     public TicketPostDTO(Ticket ticket) {

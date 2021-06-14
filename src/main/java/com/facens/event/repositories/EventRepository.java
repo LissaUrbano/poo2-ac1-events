@@ -3,7 +3,6 @@ package com.facens.event.repositories;
 import java.time.LocalDate;
 
 import com.facens.event.entities.Event;
-import com.facens.event.entities.Place;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

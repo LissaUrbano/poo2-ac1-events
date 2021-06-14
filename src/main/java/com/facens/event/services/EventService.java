@@ -70,6 +70,10 @@ public class EventService {
     }
 
     public void delete(Long id) {
+        Event event = getEventById(id);
+        if (!event.getTickets().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Não é possivel excluir, Evento possui tickets vendidos");
+        }
         try {
             eventRepository.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
@@ -248,7 +252,7 @@ public class EventService {
         attend.addTickets(ticket);
         eventRepository.save(event);
         attendRepository.save(attend);
-        return new TicketPostDTO(ticket);
+        return new TicketPostDTO(ticket.getId(), ticket.getType(), ticket.getDate(), ticket.getPrice(), attend.getId());
     }
 
     private void validateTicket(TypeTicket type) {

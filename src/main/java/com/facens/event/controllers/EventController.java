@@ -7,7 +7,6 @@ import javax.validation.Valid;
 import com.facens.event.dto.EventDTO;
 import com.facens.event.dto.TicketPostDTO;
 import com.facens.event.dto.TicketsEventDTO;
-import com.facens.event.entities.Place;
 import com.facens.event.services.EventService;
 
 import org.springframework.beans.factory.annotation.Autowired;

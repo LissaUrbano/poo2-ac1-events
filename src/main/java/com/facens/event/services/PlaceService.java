@@ -1,5 +1,6 @@
 package com.facens.event.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.facens.event.dto.PlaceDTO;
@@ -32,6 +33,10 @@ public class PlaceService {
     }
 
     public void delete(Long id) {
+        Place place = getPlaceById(id);
+        if (!place.getEvents().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Não é possivel excluir, Local possui eventos cadastrados");
+        }
         try {
             placeRepository.deleteById(id);
         } catch (EmptyResultDataAccessException e) {

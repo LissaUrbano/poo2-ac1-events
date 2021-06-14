@@ -1,9 +1,11 @@
 package com.facens.event.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.facens.event.dto.AttendDTO;
 import com.facens.event.entities.Attend;
+import com.facens.event.entities.Ticket;
 import com.facens.event.repositories.AttendRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +35,16 @@ public class AttendService {
     }
 
     public void delete(Long id) {
+        Attend attend = getAttendById(id);
         try {
+            List<Ticket> tickets = attend.getTickets();
+            if (!tickets.isEmpty() && attend.getBalance() > 0) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Não é possivel excluir, Participante possui tickets e saldo disponível");
+            } else if(tickets.isEmpty() && attend.getBalance() > 0) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Não é possivel excluir, Participante possui saldo disponível");
+            } else if(!tickets.isEmpty() && attend.getBalance() == 0) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Não é possivel excluir, Participante possui tickets");
+            }
             attendRepository.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, msgNotFound);
